@@ -73,7 +73,7 @@ export default function CreateOrder({ orders, onAddOrder }: { orders: Order[], o
                 initialValue={1}
                 rules={[{ required: true, message: "Por favor ingrese una cantidad" }]}
               >
-                <Input type="number" min={1} className="w-full" />
+                <Input type="number" className="w-full" />
               </Form.Item>
               <Form.Item
                 name="price"
@@ -81,7 +81,7 @@ export default function CreateOrder({ orders, onAddOrder }: { orders: Order[], o
                 initialValue={1}
                 rules={[{ required: true, message: "Por favor ingrese un precio" }]}
               >
-                <Input type="number" min={1} className="w-full" />
+                <Input type="number" className="w-full" />
               </Form.Item>
             </div>
             <div className="grid grid-cols-3 gap-4">
