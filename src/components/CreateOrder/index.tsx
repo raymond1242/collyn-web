@@ -14,7 +14,7 @@ export default function CreateOrder({ orders, onAddOrder }: { orders: Order[], o
       name: values.name,
       description: values.description,
       comment: "",
-      deliveryDate: moment(values.deliveryDate.format('DD/MM/YYYY HH:mm'), 'DD/MM/YYYY HH:mm'),
+      deliveryDate: moment(`${values.deliveryDate} ${values.deliveryTime}`, 'YYYY-MM-DD HH:mm'),
       quantity: values.quantity,
       price: values.price,
       paid: isPaid,
@@ -84,19 +84,26 @@ export default function CreateOrder({ orders, onAddOrder }: { orders: Order[], o
                 <InputNumber min={1} className="w-full" />
               </Form.Item>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-3 gap-4">
               <Form.Item
                 name="deliveryDate"
-                label="Fecha de entrega"
+                label="Fecha de entrega (mm/dd/yy)"
+                initialValue={moment().format('DD/MM/YY')}
                 rules={[{ required: true, message: "Por favor ingrese una fecha de entrega" }]}
               >
-                <DatePicker showNow={false} showTime={true} showSecond={false} minuteStep={15} />
+                <Input type="date" min={moment().format('DD/MM/YY')} />
+              </Form.Item>
+              <Form.Item
+                name="deliveryTime"
+                label="Hora de entrega"
+                initialValue={moment().format('HH:mm')}
+                rules={[{ required: true, message: "Por favor ingrese una hora de entrega" }]}
+              >
+                <Input type="time" />
               </Form.Item>
               <Form.Item
                 name="paid"
                 label="Pagado?"
-                // valuePropName="checked"
-                // rules={[{ required: true, message: "Por favor ingrese si el pedido fue pagado o no" }]}
               >
                 <Checkbox checked={isPaid} onChange={(e) => setIsPaid(e.target.checked)} />
               </Form.Item>
