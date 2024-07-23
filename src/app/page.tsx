@@ -3,32 +3,35 @@
 import { useState } from "react";
 import moment from "moment";
 import 'moment/locale/es';
-import Link from "next/link";
 import OrderList from "@/components/OrderList";
+import { dmSans } from "@/app/fonts";
+import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
 
 export default function Home() {
   moment().locale('es')
   const [date, setDate] = useState(moment().format('LL'))
   const [time, setTime] = useState(moment().format('HH:mm'))
 
-  setInterval(() => {
-    setTime(moment().format('HH:mm'))
-  }, 5000)
-
   return (
-    <main className="flex flex-col lg:px-12 lg:py-4 p-6 bg-white">
-      <div className="flex items-center justify-between py-2 gap-2">
-        <div className="flex flex-col gap-4">
-          <p className="text-3xl font-medium capitalize">
-            {date}
+    <main className="flex flex-col lg:px-12 lg:py-6 p-6 bg-white">
+      <div className="flex flex-row justify-between items-center py-2 gap-2">
+        <p className={`${dmSans.className} lg:text-5xl text-2xl font-semibold`}>PEDIDOS REGISTRADOS</p>
+        <div className="grid grid-cols-2">
+          <p className="flex text-base gap-2 items-center">
+            <ClockCircleOutlined />
+            Hora actual:
           </p>
-          <Link href={"/"} className="text-blue-500 hover:underline">
-            Ver pedidos de mañana
-          </Link>
+          <p className="text-lg font-light">
+            {moment().format('HH:mm')}
+          </p>
+          <p className="flex text-base gap-2 items-center">
+            <CalendarOutlined />
+            Fecha actual:
+          </p>
+          <p className="text-lg capitalize font-light">
+            {moment().format('dddd DD/MM/YY')}
+          </p>
         </div>
-        <p className="text-5xl font-bold bg-neutral-200 p-4 rounded-lg">
-          {time}
-        </p>
       </div>
       <OrderList />
     </main>

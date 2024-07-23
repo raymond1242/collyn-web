@@ -1,7 +1,8 @@
-import { Button, Modal, Input, InputNumber, Form, DatePicker, Checkbox } from "antd";
+import { Button, Modal, Input, Form, Checkbox, Select } from "antd";
 import { useState } from "react";
 import type { Order } from "@/components/OrderList";
 import moment from "moment";
+import { ShopOutlined } from "@ant-design/icons";
 
 export default function CreateOrder({ orders, onAddOrder }: { orders: Order[], onAddOrder: (order: Order) => void }) {
   const [open, setOpen] = useState(false);
@@ -13,26 +14,35 @@ export default function CreateOrder({ orders, onAddOrder }: { orders: Order[], o
       id: orders.length + 1,
       name: values.name,
       description: values.description,
+      location: values.location,
+      registeredDate: moment().format('YYYY/MM/DD'),
       comment: "",
       deliveryDate: moment(`${values.deliveryDate} ${values.deliveryTime}`, 'YYYY-MM-DD HH:mm'),
-      quantity: values.quantity,
+      deliveryTime: values.deliveryTime,
+      deliveryPlace: values.deliveryPlace,
       price: values.price,
-      paid: isPaid,
+      prod: values.prod,
+      delivered: false,
+      advance: values.advance
     });
     setOpen(false);
     form.resetFields();
   };
 
+  const handleChangeLocation = (value: string) => {
+    console.log(value);
+  }
+
   return (
-    <section className="text-right">
+    <section className="text-left">
       <Button
-        className=""
+        className="bg-blue-700 border-blue-700 text-white"
         size="large"
         onClick={() => {
           setOpen(true);
         }}
       >
-        Agregar pedido
+        Crear pedido
       </Button>
       <Modal
         open={open}
@@ -46,6 +56,20 @@ export default function CreateOrder({ orders, onAddOrder }: { orders: Order[], o
           <p className="text-3xl font-medium mb-6">
             Crear pedido
           </p>
+          <div className="flex gap-2">
+            <ShopOutlined className="text-2xl text-red-500 items-center" />
+            <Select
+              defaultValue="1"
+              size="large"
+              onChange={handleChangeLocation}
+              options={[
+                { value: '1', label: 'Tienda 1' },
+                { value: '2', label: 'Tienda 2' },
+                { value: '3', label: 'Tienda 3' },
+                { value: '4', label: 'Tienda 4', disabled: true },
+              ]}
+            />
+          </div>
           <Form
             name="order"
             onFinish={onFinish}

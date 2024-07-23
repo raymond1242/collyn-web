@@ -1,18 +1,26 @@
-import { Table, Modal, Button } from "antd";
+import { Table, Modal, Button, Select, Checkbox, Tag, DatePicker } from "antd";
 import type { TableProps } from "antd";
 import CreateOrder from "@/components/CreateOrder";
 import moment from "moment";
 import { useState } from "react";
+import { EditFilled } from "@ant-design/icons";
+
+const { RangePicker } = DatePicker;
 
 export interface Order {
   id: number;
   name: string;
   description: string;
+  location: string;
+  registeredDate: string;
   deliveryDate: moment.Moment;
+  deliveryTime: string;
+  deliveryPlace: string;
+  delivered: boolean;
   comment: string;
-  quantity: number;
+  advance: number;
+  prod: boolean;
   price: number;
-  paid: boolean;
 }
 
 const ordersMock: Order[] = [
@@ -20,30 +28,46 @@ const ordersMock: Order[] = [
     id: 1,
     name: "Torta de chocolate",
     description: "Esta es una torta de chocolate, este es un texto largo para ver si se ajusta bien",
+    location: "Ucayali",
+    registeredDate: "2023/01/01",
     deliveryDate: moment(),
+    deliveryTime: "12:00",
+    deliveryPlace: "Ucayali",
     comment: "Este es un comentario",
-    quantity: 3,
-    price: 10,
-    paid: false,
+    advance: 10,
+    prod: false,
+    delivered: false,
+    price: 100
   },
   {
     id: 2,
-    name: "Torta de papas",
+    name: "Torta de Vainilla para Jorge",
     description: "Esta es una torta de papas",
+    location: "Loreto",
+    registeredDate: "2023/01/01",
     deliveryDate: moment().add(1, 'hour'),
+    deliveryTime: "13:00",
+    deliveryPlace: "Loreto",
     comment: "Este es un comentario",
-    quantity: 2,
-    price: 10,
-    paid: true,
+    advance: 25,
+    prod: true,
+    delivered: true,
+    price: 40
   }
 ];
 
 const columns: TableProps<Order>["columns"] = [
   {
-    title: "Cantidad",
-    dataIndex: "quantity",
-    key: "quantity",
-    render: (text: number) => <p>{text}</p>,
+    title: "",
+    dataIndex: "id",
+    key: "id",
+    render: (_, record) => (
+      <Button
+        className="border-0 rounded-full"
+        icon={<EditFilled className="text-blue-700" />}
+        onClick={() => console.log(record)}
+      />
+    ),
   },
   {
     title: "Nombre",
@@ -57,24 +81,71 @@ const columns: TableProps<Order>["columns"] = [
     key: "price",
     render: (text: number) => <p>{text}</p>,
   },
+  
   {
-    title: "Hora entrega",
-    dataIndex: "deliveryDate",
-    key: "deliveryDate",
-    render: (date: moment.Moment) => <p className="text-gray-700 text-xl font-bold">{date.format('HH:mm')}</p>,
+    title: "Adelanto",
+    dataIndex: "advance",
+    key: "advance",
+    render: (text: number) => <p>{text}</p>,
   },
   {
-    title: "Pagado",
-    dataIndex: "paid",
-    key: "paid",
+    title: "Pendiente",
+    dataIndex: "price",
+    key: "price",
+    render: (_, record) => <p>{record.price - record.advance}</p>,
+  },
+  {
+    title: "Recepción",
+    dataIndex: "location",
+    key: "location",
+    render: (text: string) => <p>{text}</p>,
+  },
+  {
+    title: "Fecha registro", 
+    dataIndex: "registeredDate",
+    key: "registeredDate",
+    render: (text: string) => <p>{text}</p>,
+  },
+  {
+    title: "Fecha entrega",
+    dataIndex: "deliveryDate",
+    key: "deliveryDate",
+    render: (date: moment.Moment) => <p>{date.format('DD/MM/YY')}</p>,
+  },
+  {
+    title: "Hora entrega",
+    dataIndex: "deliveryTime",
+    key: "deliveryDate",
+    render: (date: string) => <p>{date}</p>,
+  },
+  {
+    title: "Lugar entrega",
+    dataIndex: "deliveryPlace",
+    key: "deliveryPlace",
+    render: (text: string) => <p className="text-center">{text}</p>,
+  },
+  {
+    title:"PROD",
+    dataIndex: "prod",
+    key: "prod",
+    render: (text: boolean) => text ? (
+      <div className="text-center">
+        <Tag className="rounded-md bg-blue-700 text-white border-blue-700">Si</Tag>
+      </div>
+    ) : (
+      <div className="text-center">
+        <Tag className="rounded-md text-neutral-400">No</Tag>
+      </div>
+    ),
+  },
+  {
+    title: "Entregado",
+    dataIndex: "delivered",
+    key: "delivered",
     render: (text: boolean) => (
-      <>
-        {text ? (
-          <p className="bg-green-200 text-green-700 w-fit px-2 py-1 text-sm font-medium rounded-md">Si</p>
-        ) : (
-          <p className="bg-red-200 text-red-700 w-fit px-2 py-1 text-sm font-medium rounded-md">No</p>
-        )}
-      </>
+      <div className="text-center">
+        <Checkbox checked={text} />
+      </div>
     ),
   }
 ];
@@ -95,45 +166,35 @@ export default function OrderList () {
     setOrders(orders.filter((order) => order.id !== currentOrder?.id));
   }
 
+  const dateFilter = [
+    "Hoy",
+    "Mañana",
+    "Próximos 7 días",
+    "Próximos 30 días",
+  ]
+
   return (
-    <section className="grid lg:grid-cols-2 grid-cols-1 lg:gap-8 gap-4 py-4">
-      <div className="flex flex-col gap-4">
-        <p className="text-2xl font-medium">
-          Pedidos pendientes
-        </p>
-        <Table
-          dataSource={orders}
-          columns={columns}
-          pagination={false}
-          size="middle"
-          className="hover:cursor-pointer"
-          rowKey={(record) => record.id}
-          locale={{emptyText: 'No hay pedidos pendientes'}}
-          onRow={(record) => ({
-            onClick: () => {
-              setCurrentOrder(record);
-              setOpenModal(true);
-            },
-          })}
-        />
-      </div>
-      <div className="flex flex-col gap-4">
-        <CreateOrder orders={orders} onAddOrder={handleAddOrder} />
-        <div className="flex flex-col gap-4">
-          <p className="text-xl font-medium text-neutral-500">
-            Pedidos completados
-          </p>
-          <Table
-            dataSource={completedOrders}
-            locale={{emptyText: 'No hay pedidos completados'}}
-            columns={columns}
-            size="middle"
-            pagination={false}
-            className="hover:cursor-pointer"
-            rowKey={(record) => record.id}
-            />
+    <section className="grid gap-4 py-2">
+      <div className="flex justify-between py-2">
+        <div className="flex gap-2 items-center">
+          {dateFilter.map((date, key) => (
+            <Button key={key} className="rounded-lg text-blue-700 border-blue-700 border">
+              {date}
+            </Button>
+          ))}
+          <RangePicker className="rounded-lg text-blue-700 border-blue-700 border" />
         </div>
+        <CreateOrder orders={orders} onAddOrder={handleAddOrder} />
       </div>
+      <Table
+        dataSource={orders}
+        columns={columns}
+        pagination={false}
+        size="middle"
+        className="hover:cursor-pointer"
+        rowKey={(record) => record.id}
+        locale={{emptyText: 'No hay pedidos'}}
+      />
       <Modal
         open={openModal}
         onCancel={() => {
@@ -168,6 +229,7 @@ export default function OrderList () {
               setOpenModal(false);
               handleCompleteOrder();
             }}
+            className="mb-1"
           >
             Completado
           </Button>
