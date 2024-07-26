@@ -1,0 +1,12 @@
+.openapi-generator-ignore
+apis/AuthApi.ts
+apis/OrdersApi.ts
+apis/index.ts
+index.ts
+models/Order.ts
+models/OrderImage.ts
+models/Token.ts
+models/User.ts
+models/UserLogin.ts
+models/index.ts
+runtime.ts

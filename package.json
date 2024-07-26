@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-api": "rimraf src/services/api/generated-api && openapi-generator-cli generate"
   },
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
@@ -17,6 +18,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.13.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
