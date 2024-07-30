@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
+
+const imageHostName = process.env.IMAGE_HOST_NAME || '';
+
 const nextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: process.env.IMAGE_HOST_NAME,
+        hostname: imageHostName,
         port: '',
         pathname: '/media/company/logos/**',
       },
