@@ -32,7 +32,7 @@ export default function Auth() {
 
   return (
     <main className="flex gap-4 justify-center items-center h-screen">
-      <div className="flex flex-col lg:gap-5 gap-4 w-96">
+      <div className="flex flex-col lg:gap-5 gap-4 lg:w-96 p-6">
         <p className="text-5xl font-semibold">Iniciar sesión</p>
         <Form
           form={form}
