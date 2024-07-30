@@ -13,49 +13,42 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    User,
-    UserFromJSON,
-    UserFromJSONTyped,
-    UserToJSON,
-} from './';
-
 /**
  * 
  * @export
- * @interface Token
+ * @interface Company
  */
-export interface Token {
+export interface Company {
     /**
      * 
-     * @type {User}
-     * @memberof Token
-     */
-    user: User;
-    /**
-     * Token key
      * @type {string}
-     * @memberof Token
+     * @memberof Company
      */
-    key: string;
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    readonly logo?: string | null;
 }
 
-export function TokenFromJSON(json: any): Token {
-    return TokenFromJSONTyped(json, false);
+export function CompanyFromJSON(json: any): Company {
+    return CompanyFromJSONTyped(json, false);
 }
 
-export function TokenFromJSONTyped(json: any, ignoreDiscriminator: boolean): Token {
+export function CompanyFromJSONTyped(json: any, ignoreDiscriminator: boolean): Company {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'user': UserFromJSON(json['user']),
-        'key': json['key'],
+        'name': json['name'],
+        'logo': !exists(json, 'logo') ? undefined : json['logo'],
     };
 }
 
-export function TokenToJSON(value?: Token | null): any {
+export function CompanyToJSON(value?: Company | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -64,8 +57,7 @@ export function TokenToJSON(value?: Token | null): any {
     }
     return {
         
-        'user': UserToJSON(value.user),
-        'key': value.key,
+        'name': value.name,
     };
 }
 

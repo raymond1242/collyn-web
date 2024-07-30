@@ -1,5 +1,5 @@
 import { Configuration } from "./generated-api";
-import { AuthApi, OrdersApi } from "./generated-api/apis";
+import { AuthApi, OrdersApi, CompanyApi } from "./generated-api/apis";
 import { AuthService } from "@/services/auth.service";
 
 export * from "./generated-api";
@@ -16,6 +16,14 @@ export const AuthApiService = (): AuthApi =>
 
 export const OrdersApiService = (): OrdersApi =>
   new OrdersApi(
+    new Configuration({
+      basePath: API_BASE_URL,
+      headers: AuthService.getDefaultHeaders(),
+    }),
+  );
+
+export const CompanyApiService = (): CompanyApi =>
+  new CompanyApi(
     new Configuration({
       basePath: API_BASE_URL,
       headers: AuthService.getDefaultHeaders(),

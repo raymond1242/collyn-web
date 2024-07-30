@@ -3,16 +3,31 @@
 import { Form, Input, Button } from "antd";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AuthApiService, AuthService } from "@/services";
 
 export default function Auth() {
   const [form] = Form.useForm();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const authApi = AuthApiService();
 
   const onFinish = (values: any) => {
     setLoading(true);
     console.log(values);
-    router.push('/order');
+
+    const requestParamas = {
+      data: {
+        username: values.username,
+        password: values.password
+      }
+    }
+
+    authApi.authLogin(requestParamas).then((response) => {
+      console.log(response);
+      AuthService.setAuthToken(response.key);
+      AuthService.setUserName(response.user.username);
+      router.push('/order');
+    });
   };
 
   return (
@@ -30,14 +45,14 @@ export default function Auth() {
             label="Usuario"
             rules={[{ required: true, message: "Por favor ingrese un usuario" }]}
           >
-            <Input />
+            <Input className="border-primary" />
           </Form.Item>
           <Form.Item
             name="password"
             label="Contraseña"
             rules={[{ required: true, message: "Por favor ingrese una contraseña" }]}
           >
-            <Input.Password />
+            <Input.Password className="border-primary" />
           </Form.Item>
           <Form.Item className="mb-1">
             <Button

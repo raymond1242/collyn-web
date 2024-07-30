@@ -1,5 +1,5 @@
 const TOKEN_ITEM = 'authToken';
-const USER_EMAIL = 'userEmail';
+const COMPANY_NAME = 'companyName';
 const USER_NAME = 'userName';
 
 
@@ -21,14 +21,14 @@ export const AuthService = {
     }
     return { Authorization: `Token ${token}` };
   },
-  getUserEmail(): string | null {
-    return localStorage.getItem(USER_EMAIL);
+  getCompanyName(): string | null {
+    return localStorage.getItem(COMPANY_NAME);
   },
-  setUserEmail(email: string): void {
-    localStorage.setItem(USER_EMAIL, email);
+  setCompanyName(name: string): void {
+    localStorage.setItem(COMPANY_NAME, name);
   },
-  removeUserEmail(): void {
-    localStorage.removeItem(USER_EMAIL);
+  removeCompanyName(): void {
+    localStorage.removeItem(COMPANY_NAME);
   },
   getUserName(): string | null {
     return localStorage.getItem(USER_NAME);

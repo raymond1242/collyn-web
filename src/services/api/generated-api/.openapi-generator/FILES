@@ -1,8 +1,10 @@
 .openapi-generator-ignore
 apis/AuthApi.ts
+apis/CompanyApi.ts
 apis/OrdersApi.ts
 apis/index.ts
 index.ts
+models/Company.ts
 models/Order.ts
 models/OrderImage.ts
 models/Token.ts

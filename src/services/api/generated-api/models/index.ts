@@ -1,3 +1,4 @@
+export * from './Company';
 export * from './Order';
 export * from './OrderImage';
 export * from './Token';
