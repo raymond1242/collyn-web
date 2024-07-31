@@ -5,38 +5,39 @@ import { useState } from "react";
 import moment from "moment";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { OrdersApiService } from "@/services/api";
 
 export default function CreateOrder() {
   const [form] = Form.useForm();
   const router = useRouter();
-  const ordersApi = OrdersApiService();
+  const [images, setImages] = useState<File[]>([]);
 
   const buildShippingDate = (date: string, time: string) => {
     const dateTime = moment(date + ' ' + time, 'DD/MM/YY HH:mm');
     return dateTime.toDate();
   }
 
+  const onChangeImages = (event: any) => {
+    const fileList = event.target.files;
+    setImages(fileList);
+  }
+
   const onFinish = (values: any) => {
     const shippingDate = buildShippingDate(values.deliveryDate, values.deliveryTime);
-    console.log(shippingDate);
 
-    const requestParamas = {
-      data: {
-        name: values.name,
-        description: values.description,
-        registrationPlace: values.location,
-        shippingPlace: values.shippingPlace,
-        shippingDate: shippingDate,
-        advancePayment: values.advancePayment,
-        pendingPayment: values.pendingPayment,
-        hasProduction: values.prod,
-        company: 1,
-        price: values.price
-      }
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('description', values.description);
+    formData.append('registration_place', values.location);
+    formData.append('shipping_place', values.shippingPlace);
+    formData.append('shipping_date', shippingDate.toDateString());
+    formData.append('advance_payment', values.advancePayment);
+    formData.append('pending_payment', values.pendingPayment);
+    formData.append('has_production', values.prod);
+    formData.append('delivered', values.delivered);
+
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i]);
     }
-
-    console.log(requestParamas);
 
     // ordersApi.ordersCreate(requestParamas).then((response) => {
     //   console.log(response);
@@ -161,8 +162,10 @@ export default function CreateOrder() {
                 <Input type="time" />
               </Form.Item>
             </div>
-            <Form.Item>
-              <Input type="image" className="w-full" />
+            <Form.Item
+              name="images"
+            >
+              <input type="file" multiple accept="image/*" onChange={onChangeImages} />
             </Form.Item>
             <Form.Item className="mb-2 text-right">
               <Button
