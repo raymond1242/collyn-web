@@ -3,23 +3,35 @@
 import { Form, Input, Button, Switch, Select } from "antd";
 import { useState } from "react";
 import moment from "moment";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+
+interface ImageFile {
+  id: string;
+  file: File;
+}
 
 export default function CreateOrder() {
   const [form] = Form.useForm();
   const router = useRouter();
-  const [images, setImages] = useState<File[]>([]);
 
   const buildShippingDate = (date: string, time: string) => {
     const dateTime = moment(date + ' ' + time, 'DD/MM/YY HH:mm');
     return dateTime.toDate();
   }
 
-  const onChangeImages = (event: any) => {
-    const fileList = event.target.files;
-    setImages(fileList);
-  }
+  const [images, setImages] = useState<ImageFile[]>([]);
+
+  const onChangeInputFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const filesArray = Array.from(event.target.files).map(file => ({
+        id: URL.createObjectURL(file),
+        file
+      }));
+      setImages(prevImages => prevImages.concat(filesArray));
+      event.target.value = ''; 
+    }
+  };
 
   const onFinish = (values: any) => {
     const shippingDate = buildShippingDate(values.deliveryDate, values.deliveryTime);
@@ -36,7 +48,7 @@ export default function CreateOrder() {
     formData.append('delivered', values.delivered);
 
     for (let i = 0; i < images.length; i++) {
-      formData.append('images', images[i]);
+      formData.append('images', images[i].file);
     }
 
     // ordersApi.ordersCreate(requestParamas).then((response) => {
@@ -56,7 +68,7 @@ export default function CreateOrder() {
         <ArrowLeftOutlined />
         Atrás
       </p>
-      <div className="flex flex-col mx-auto gap-5 lg:w-[480px] w-full p-4">
+      <div className="flex flex-col mx-auto gap-5 lg:w-[500px] w-full p-4">
         <p className="text-[44px] font-semibold">Crear pedido</p>
         <Form
             name="order"
@@ -67,17 +79,18 @@ export default function CreateOrder() {
             <div className="grid grid-cols-3 gap-4">
               <Form.Item
                 name="location"
-                label="Tienda"
+                label="Tienda Origen"
                 className="col-span-2"
                 rules={[{ required: true, message: "Por favor seleccione una tienda" }]}
               >
                 <Select
                   size="large"
                   options={[
-                    { value: "1", label: 'Tienda 1' },
-                    { value: "2", label: 'Tienda 2' },
-                    { value: "3", label: 'Tienda 3' },
-                    { value: "4", label: 'Tienda 4', disabled: true },
+                    { value: "1", label: 'Loreto' },
+                    { value: "2", label: 'Esquina' },
+                    { value: "3", label: 'Alameda' },
+                    { value: "4", label: 'Ucayali' },
+                    { value: "5", label: 'Central' },
                   ]}
                 />
               </Form.Item>
@@ -102,7 +115,7 @@ export default function CreateOrder() {
               label="Descripción"
               rules={[{ required: true, message: "Por favor ingrese una descripción" }]}
             >
-              <Input.TextArea placeholder="Descripción" />
+              <Input.TextArea rows={4} placeholder="Descripción" />
             </Form.Item>
             <div className="grid grid-cols-2 gap-4">
               <Form.Item
@@ -110,7 +123,16 @@ export default function CreateOrder() {
                 label="Lugar de entrega"
                 rules={[{ required: true, message: "Por favor ingrese un lugar de entrega" }]}
               >
-                <Input />
+                <Select
+                  size="large"
+                  options={[
+                    { value: "1", label: 'Loreto' },
+                    { value: "2", label: 'Esquina' },
+                    { value: "3", label: 'Alameda' },
+                    { value: "4", label: 'Ucayali' },
+                    { value: "5", label: 'Central' },
+                  ]}
+                />
               </Form.Item>
               <Form.Item
                 name="phoneNumber"
@@ -148,10 +170,10 @@ export default function CreateOrder() {
               <Form.Item
                 name="deliveryDate"
                 label="Fecha entrega (mm/dd/aa)"
-                initialValue={moment().format('DD/MM/YY')}
+                initialValue={moment().format('MM/DD/YY')}
                 rules={[{ required: true, message: "Por favor ingrese una fecha de entrega" }]}
               >
-                <Input type="date" min={moment().format('DD/MM/YY')} />
+                <Input type="date" min={moment().format('MM/DD/YY')} /> 
               </Form.Item>
               <Form.Item
                 name="deliveryTime"
@@ -165,7 +187,32 @@ export default function CreateOrder() {
             <Form.Item
               name="images"
             >
-              <input type="file" multiple accept="image/*" onChange={onChangeImages} />
+              <div className="flex flex-col gap-2 mt-3">
+                <div>
+                  <label
+                    htmlFor="input-file"
+                    className="flex gap-2 cursor-pointer bg-white border border-primary rounded-lg p-2 w-fit text-primary"
+                  >
+                    <UploadOutlined className="text-primary" />
+                    Subir imagenes
+                  </label>
+                  <input
+                    type='file'
+                    id="input-file"
+                    multiple
+                    accept='image/png, image/jpeg'
+                    onChange={onChangeInputFile}
+                    style={{ display: 'none' }}
+                  ></input>
+                </div>
+                <div className="flex flex-wrap gap-4 mt-4">
+                  {images.map(image => (
+                    <div key={image.id}>
+                      <img src={image.id} alt="Selected" width="140" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </Form.Item>
             <Form.Item className="mb-2 text-right">
               <Button
