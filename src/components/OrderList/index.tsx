@@ -2,114 +2,12 @@ import { Table, Button, Switch, Tag, DatePicker } from "antd";
 import type { TableProps } from "antd";
 import moment from "moment";
 import { useState, useEffect } from "react";
-import { EditFilled, EyeOutlined } from "@ant-design/icons";
+import { EditFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { Order, OrdersApiService } from "@/services";
+import OrderViewerModal from "@/components/OrderViewerModal";
 
 const { RangePicker } = DatePicker;
-
-const columns: TableProps<Order>["columns"] = [
-  {
-    title: "",
-    dataIndex: "id",
-    key: "id",
-    width: 100,
-    render: (_, record) => (
-      <div className="flex gap-3 items-center">
-        <Button
-          className="rounded-full"
-          icon={<EditFilled />}
-          onClick={() => console.log(record)}
-        />
-        <Button
-          type="primary"
-          className="rounded-full"
-          icon={<EyeOutlined />}
-          onClick={() => console.log(record)}
-        />
-      </div>
-    ),
-  },
-  {
-    title: "Nombre",
-    dataIndex: "name",
-    key: "name",
-    render: (text: string) => <p>{text}</p>,
-  },
-  {
-    title: "Precio",
-    dataIndex: "price",
-    key: "price",
-    render: (text: number) => <p>{text}</p>,
-  },
-  
-  {
-    title: "Adelanto",
-    dataIndex: "advancePayment",
-    key: "advancePayment",
-    render: (text: string) => <p>{text}</p>,
-  },
-  {
-    title: "Pendiente",
-    dataIndex: "price",
-    key: "price",
-    render: (_, record) => <p>{record.pendingPayment}</p>,
-  },
-  {
-    title: "Recepción",
-    dataIndex: "shippingPlace",
-    key: "location",
-    render: (text: string) => <p>{text}</p>,
-  },
-  {
-    title: "Fecha registro", 
-    dataIndex: "createdAt",
-    key: "registeredDate",
-    render: (text: Date) => <p>{moment(text).format('DD/MM/YY')}</p>,
-  },
-  {
-    title: "Fecha entrega",
-    dataIndex: "shippingDate",
-    key: "shippingDate",
-    render: (date: Date) => <p>{moment(date).format('DD/MM/YY')}</p>,
-  },
-  {
-    title: "Hora entrega",
-    dataIndex: "shippingDate",
-    key: "shippingDate",
-    render: (date: Date) => <p>{moment(date).format('HH:mm')}</p>,
-  },
-  {
-    title: "Lugar entrega",
-    dataIndex: "shippingPlace",
-    key: "shippingPlace",
-    render: (text: string) => <p>{text}</p>,
-  },
-  {
-    title:"PROD",
-    dataIndex: "hasProduction",
-    key: "hasProduction",
-    render: (text: boolean) => text ? (
-      <div className="text-center">
-        <Tag className="rounded-md bg-primary text-white border-primary">Si</Tag>
-      </div>
-    ) : (
-      <div className="text-center">
-        <Tag className="rounded-md text-neutral-400">No</Tag>
-      </div>
-    ),
-  },
-  {
-    title: "Entregado",
-    dataIndex: "delivered",
-    key: "delivered",
-    render: (text: boolean) => (
-      <div className="text-center">
-        <Switch checked={text} onChange={(e) => console.log(e)} />
-      </div>
-    ),
-  }
-];
 
 export default function OrderList () {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -117,8 +15,6 @@ export default function OrderList () {
   const router = useRouter();
   const ordersApi = OrdersApiService();
   const [currentFilter, setCurrentFilter] = useState(1);
-  const [currentOrder, setCurrentOrder] = useState<Order>();
-  const [openModal, setOpenModal] = useState(false);
 
   const columns: TableProps<Order>["columns"] = [
     {
@@ -134,15 +30,7 @@ export default function OrderList () {
             icon={<EditFilled />}
             onClick={() => console.log(record)}
           />
-          <Button
-            type="primary"
-            className="rounded-full"
-            icon={<EyeOutlined />}
-            onClick={() => {
-              setCurrentOrder(record);
-              setOpenModal(true);
-            }}
-          />
+          <OrderViewerModal record={record} />
         </div>
       ),
     },

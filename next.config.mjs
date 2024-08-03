@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 
-const imageHostName = process.env.NEXT_PUBLIC_IMAGE_HOST_NAME;
+const imageHostName = process.env.IMAGE_HOST_NAME;
 
 const nextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: imageHostName,
+        hostname: 'collyn-bucket-local.s3.amazonaws.com',
         port: '',
-        pathname: '/media/company/logos/**',
+        pathname: '/media/**/**',
       },
     ],
   },
