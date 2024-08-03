@@ -27,7 +27,10 @@ export default function Auth() {
       AuthService.setAuthToken(response.key);
       AuthService.setUserName(response.user.username);
       router.push('/order');
-    });
+    }).catch((error) => {
+      console.log(error);
+      setLoading(false);
+    });;
   };
 
   return (

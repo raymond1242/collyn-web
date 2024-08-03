@@ -29,6 +29,7 @@ export default function Header () {
       setCompanyName(response.name);
       setCompanyLogo(response.logo as string);
       setIsLoggedIn(true);
+      router.push('/order');
     }).catch((error) => {
       console.log(error);
       router.push('/auth');
@@ -62,10 +63,10 @@ export default function Header () {
               <Image
                 src={companyLogo}
                 width={50}
-                height={44}
+                height={50}
                 onLoad={onLoadImage}
                 alt="Company logo"
-                className={`${imageLoading ? '' : 'w-auto'}`}
+                className={`${imageLoading ? '' : 'w-auto h-auto'}`}
               />
             </Spin>
           </div>

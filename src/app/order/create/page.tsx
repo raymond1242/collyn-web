@@ -1,23 +1,34 @@
 "use client";
 
 import { Form, Input, Button, Switch, Select } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import moment from "moment";
 import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+import { createOrder } from "@/services";
 
 interface ImageFile {
   id: string;
   file: File;
 }
 
+
 export default function CreateOrder() {
   const [form] = Form.useForm();
   const router = useRouter();
+  const [pendingPayment, setPendingPayment] = useState(0);
+  const [advancePayment, setAdvancePayment] = useState(0);
+  const [price, setPrice] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  const buildShippingDate = (date: string, time: string) => {
-    const dateTime = moment(date + ' ' + time, 'DD/MM/YY HH:mm');
-    return dateTime.toDate();
+  useEffect(() => {
+    setPendingPayment(price - advancePayment);
+  }, [price, advancePayment]);
+
+  const buildShippingDate = (date: string, time: string): string => {
+    const dateTime = moment(date + ' ' + time, 'YY-MM-DD HH:mm');
+    return dateTime.format('YYYY-MM-DDThh:mm');
+
   }
 
   const [images, setImages] = useState<ImageFile[]>([]);
@@ -34,31 +45,35 @@ export default function CreateOrder() {
   };
 
   const onFinish = (values: any) => {
+    setLoading(true);
     const shippingDate = buildShippingDate(values.deliveryDate, values.deliveryTime);
 
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('description', values.description);
+    formData.append('price', values.price);
+    formData.append('advance_payment', String(advancePayment));
+    formData.append('pending_payment', String(pendingPayment));
     formData.append('registration_place', values.location);
     formData.append('shipping_place', values.shippingPlace);
-    formData.append('shipping_date', shippingDate.toDateString());
-    formData.append('advance_payment', values.advancePayment);
-    formData.append('pending_payment', values.pendingPayment);
-    formData.append('has_production', values.prod);
-    formData.append('delivered', values.delivered);
+    formData.append('shipping_date', shippingDate);
+    formData.append('has_production', values.prod ? 'true' : 'false');
 
     for (let i = 0; i < images.length; i++) {
       formData.append('images', images[i].file);
     }
 
-    // ordersApi.ordersCreate(requestParamas).then((response) => {
-    //   console.log(response);
-    // });
-
+    createOrder(formData).then((response) => {
+      setLoading(false);
+      console.log(response);
+    }).catch((error) => {
+      setLoading(false);
+      console.error(error);
+    })
   };
 
   return (
-    <main className="flex flex-col gap-3 bg-white h-screen w-full py-4 px-6">
+    <main className="flex flex-col gap-3 bg-whitew-full py-4 px-6">
       <p
         className="flex flex-row gap-2 cursor-pointer text-primary font-light"
         onClick={() => {
@@ -75,6 +90,11 @@ export default function CreateOrder() {
             onFinish={onFinish}
             form={form}
             layout="vertical"
+            initialValues={
+              {
+                pendingPayment: pendingPayment
+              }
+            }
           >
             <div className="grid grid-cols-3 gap-4">
               <Form.Item
@@ -86,11 +106,11 @@ export default function CreateOrder() {
                 <Select
                   size="large"
                   options={[
-                    { value: "1", label: 'Loreto' },
-                    { value: "2", label: 'Esquina' },
-                    { value: "3", label: 'Alameda' },
-                    { value: "4", label: 'Ucayali' },
-                    { value: "5", label: 'Central' },
+                    { value: 'Loreto', label: 'Loreto' },
+                    { value: 'Esquina', label: 'Esquina' },
+                    { value: 'Alameda', label: 'Alameda' },
+                    { value: 'Ucayali', label: 'Ucayali' },
+                    { value: 'Central', label: 'Central' },
                   ]}
                 />
               </Form.Item>
@@ -126,11 +146,11 @@ export default function CreateOrder() {
                 <Select
                   size="large"
                   options={[
-                    { value: "1", label: 'Loreto' },
-                    { value: "2", label: 'Esquina' },
-                    { value: "3", label: 'Alameda' },
-                    { value: "4", label: 'Ucayali' },
-                    { value: "5", label: 'Central' },
+                    { value: 'Loreto', label: 'Loreto' },
+                    { value: 'Esquina', label: 'Esquina' },
+                    { value: 'Alameda', label: 'Alameda' },
+                    { value: 'Ucayali', label: 'Ucayali' },
+                    { value: 'Central', label: 'Central' },
                   ]}
                 />
               </Form.Item>
@@ -145,25 +165,24 @@ export default function CreateOrder() {
               <Form.Item
                 name="price"
                 label="Precio"
-                initialValue={1}
+                initialValue={price}
                 rules={[{ required: true, message: "Por favor ingrese un precio" }]}
               >
-                <Input type="number" className="w-full" />
+                <Input min={1} type="number" onChange={(e) => setPrice(Number(e.target.value))} className="w-full" />
               </Form.Item>
               <Form.Item
                 name="advancePayment"
                 label="Adelanto"
-                initialValue={1}
+                initialValue={advancePayment}
                 rules={[{ required: true, message: "Por favor ingrese una cantidad" }]}
               >
-                <Input type="number" className="w-full" />
+                <Input min={0} max={price} type="number" onChange={(e) => setAdvancePayment(Number(e.target.value))} className="w-full" />
               </Form.Item>
               <Form.Item
                 name="pendingPayment"
                 label="Pendiente"
-                initialValue={1}
               >
-                <Input disabled className="w-full" />
+                <p className="border border-neutral-300 py-2 px-3 bg-neutral-100 rounded-md w-40">{pendingPayment}</p>
               </Form.Item>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -216,6 +235,7 @@ export default function CreateOrder() {
             </Form.Item>
             <Form.Item className="mb-2 text-right">
               <Button
+                loading={loading}
                 type="primary"
                 size="large"
                 htmlType="submit"

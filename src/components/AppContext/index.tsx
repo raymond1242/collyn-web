@@ -9,7 +9,7 @@ export default function AppContext({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   
   useEffect(() => {
-    if (pathname.includes("/auth") || pathname.includes("/order/create")) {
+    if (pathname.includes("/auth")) {
       setIsAuthPage(true);
     } else {
       setIsAuthPage(false);
