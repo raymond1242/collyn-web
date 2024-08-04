@@ -81,3 +81,15 @@
 .ant-switch-checked {
   background-color: var(--primary) !important;
 }
+
+.text-title { 
+  @apply text-base font-light text-neutral-500
+}
+
+.text-description { 
+  @apply text-base font-light
+}
+
+.text-subtitle { 
+  @apply text-3xl font-medium text-neutral-700
+}
