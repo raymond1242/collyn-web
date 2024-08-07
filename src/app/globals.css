@@ -57,6 +57,18 @@
   }
 }
 
+.btn-danger {
+  @apply bg-red-500 text-white border-red-500;
+
+  &:hover {
+    @apply text-red-500 bg-white border-red-500 !important;
+  }
+
+  &:disabled {
+    @apply pointer-events-none
+  }
+}
+
 .ant-btn-primary {
   @apply bg-primary text-white;
   border: 1px solid var(--primary);

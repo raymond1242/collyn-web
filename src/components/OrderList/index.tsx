@@ -6,6 +6,7 @@ import { EditFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { Order, OrdersApiService } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
+import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 
 const { RangePicker } = DatePicker;
 
@@ -28,7 +29,6 @@ export default function OrderList () {
             disabled
             className="rounded-full"
             icon={<EditFilled />}
-            onClick={() => console.log(record)}
           />
           <OrderViewerModal record={record} />
         </div>
@@ -107,23 +107,19 @@ export default function OrderList () {
       title: "Entregado",
       dataIndex: "delivered",
       key: "delivered",
-      render: (text: boolean, record) => (
+      render: (delivered: boolean, record) => (
         <div className="text-center">
-          <Switch checked={text} onChange={(e) => onChangeDeliveryStatus(e, record)} />
+          <SwitchConfirmModal checked={delivered} record={record} orders={orders} setOrders={setOrders} />
         </div>
       ),
     }
   ];
 
-  const onChangeDeliveryStatus = (status: boolean, currentOrder: Order) => {
-    console.log(status, currentOrder);
-  }
-
   useEffect(() => {
     ordersApi.ordersList().then((response) => {
       setOrders(response);
     }).catch((error) => {
-      console.log(error);
+      console.error(error);
     });
   }, []);
 

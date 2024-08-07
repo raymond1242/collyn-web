@@ -13,6 +13,7 @@ export default function Header () {
   const [companyName, setCompanyName] = useState('');
   const [companyLogo, setCompanyLogo] = useState('');
   const [imageLoading, setImageLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const companyApi = CompanyApiService();
 
   useEffect(() => {
@@ -20,18 +21,22 @@ export default function Header () {
     const token = AuthService.getAuthToken();
     if (token) {
       verifyToken();
+    } else {
+      setImageLoading(false);
     }
   }, []);
 
   const verifyToken = () => {
     companyApi.companyRead({ username: AuthService.getUserName() as string }).then((response) => {
-      console.log(response);
       setCompanyName(response.name);
       setCompanyLogo(response.logo as string);
       setIsLoggedIn(true);
       router.push('/order');
     }).catch((error) => {
       console.log(error);
+      AuthService.removeAuthToken()
+      AuthService.removeUserName()
+      AuthService.removeCompanyName()
       router.push('/auth');
     });
   }
@@ -60,15 +65,32 @@ export default function Header () {
               <p className="text-xs font-extralight">Organización</p>
             </div>
             <Spin spinning={imageLoading}>
-              <Image
-                src={companyLogo}
-                width={50}
-                height={50}
-                onLoad={onLoadImage}
-                alt="Company logo"
-                className={`${imageLoading ? '' : 'w-auto h-auto'}`}
-              />
+              {companyLogo && (
+                <Image
+                  src={companyLogo}
+                  width={50}
+                  height={50}
+                  onLoad={onLoadImage}
+                  alt="Company logo"
+                  className={`${imageLoading ? '' : ''}`}
+                />
+              )}
             </Spin>
+            <div>
+              <Button
+                loading={logoutLoading}
+                className="btn-danger"
+                onClick={() => {
+                  setLogoutLoading(true);
+                  AuthService.removeAuthToken()
+                  AuthService.removeUserName()
+                  AuthService.removeCompanyName()
+                  router.push('/auth');
+                }}
+              >
+                Cerrar sesión
+              </Button>
+            </div>
           </div>
         ) : (
           <Button

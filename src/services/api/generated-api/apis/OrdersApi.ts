@@ -21,10 +21,18 @@ import {
     OrderCreate,
     OrderCreateFromJSON,
     OrderCreateToJSON,
+    OrderUpdateDelivered,
+    OrderUpdateDeliveredFromJSON,
+    OrderUpdateDeliveredToJSON,
 } from '../models';
 
 export interface OrdersCreateRequest {
     data: OrderCreate;
+}
+
+export interface OrdersUpdateDeliveredRequest {
+    id: string;
+    data: OrderUpdateDelivered;
 }
 
 /**
@@ -90,6 +98,44 @@ export class OrdersApi extends runtime.BaseAPI {
      */
     async ordersList(): Promise<Array<Order>> {
         const response = await this.ordersListRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async ordersUpdateDeliveredRaw(requestParameters: OrdersUpdateDeliveredRequest): Promise<runtime.ApiResponse<Order>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling ordersUpdateDelivered.');
+        }
+
+        if (requestParameters.data === null || requestParameters.data === undefined) {
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling ordersUpdateDelivered.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/orders/{id}/update_delivered`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OrderUpdateDeliveredToJSON(requestParameters.data),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OrderFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async ordersUpdateDelivered(requestParameters: OrdersUpdateDeliveredRequest): Promise<Order> {
+        const response = await this.ordersUpdateDeliveredRaw(requestParameters);
         return await response.value();
     }
 

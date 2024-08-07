@@ -8,6 +8,7 @@ models/Company.ts
 models/Order.ts
 models/OrderCreate.ts
 models/OrderImage.ts
+models/OrderUpdateDelivered.ts
 models/Token.ts
 models/User.ts
 models/UserLogin.ts

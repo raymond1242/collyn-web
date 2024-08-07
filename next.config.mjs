@@ -4,6 +4,7 @@ const imageHostName = process.env.IMAGE_HOST_NAME;
 
 const nextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
