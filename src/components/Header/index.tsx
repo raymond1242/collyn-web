@@ -6,15 +6,22 @@ import { Button, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { AuthService, CompanyApiService } from "@/services";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export default function Header () {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [companyName, setCompanyName] = useState('');
-  const [companyLogo, setCompanyLogo] = useState('');
   const [imageLoading, setImageLoading] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const companyApi = CompanyApiService();
+
+  const {
+    companyName,
+    setCompanyName,
+    companyLogo,
+    setCompanyLogo,
+    isAuthenticated,
+    setIsAuthenticated,
+  } = useAuthContext();
 
   useEffect(() => {
     setImageLoading(true);
@@ -28,15 +35,18 @@ export default function Header () {
 
   const verifyToken = () => {
     companyApi.companyRead({ username: AuthService.getUserName() as string }).then((response) => {
+      console.log(response);
       setCompanyName(response.name);
       setCompanyLogo(response.logo as string);
-      setIsLoggedIn(true);
+      setIsAuthenticated(true);
       router.push('/order');
     }).catch((error) => {
       console.log(error);
       AuthService.removeAuthToken()
+      setIsAuthenticated(false);
+      setCompanyName('');
+      setCompanyLogo('');
       AuthService.removeUserName()
-      AuthService.removeCompanyName()
       router.push('/auth');
     });
   }
@@ -58,7 +68,7 @@ export default function Header () {
         </Link>
       </div>
       <div className="flex flex-row items-center gap-4">
-        {isLoggedIn ? (
+        {isAuthenticated ? (
           <div className="flex flex-row items-center gap-3">
             <div className="flex flex-col text-right">
               <p className="text-base font-medium">{companyName}</p>

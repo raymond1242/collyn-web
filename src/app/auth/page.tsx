@@ -4,12 +4,15 @@ import { Form, Input, Button } from "antd";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthApiService, AuthService } from "@/services";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export default function Auth() {
   const [form] = Form.useForm();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const authApi = AuthApiService();
+
+  const { setIsAuthenticated } = useAuthContext();
 
   const onFinish = (values: any) => {
     setLoading(true);
@@ -25,6 +28,7 @@ export default function Auth() {
     authApi.authLogin(requestParamas).then((response) => {
       AuthService.setAuthToken(response.key);
       AuthService.setUserName(response.user.username);
+      setIsAuthenticated(true);
       router.push('/order');
     }).catch((error) => {
       console.error(error);
