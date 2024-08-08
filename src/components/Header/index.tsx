@@ -35,7 +35,6 @@ export default function Header () {
 
   const verifyToken = () => {
     companyApi.companyRead({ username: AuthService.getUserName() as string }).then((response) => {
-      console.log(response);
       setCompanyName(response.name);
       setCompanyLogo(response.logo as string);
       setIsAuthenticated(true);

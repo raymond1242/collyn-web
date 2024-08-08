@@ -16,7 +16,6 @@ export default function Auth() {
 
   const onFinish = (values: any) => {
     setLoading(true);
-    console.log(values);
 
     const requestParamas = {
       data: {

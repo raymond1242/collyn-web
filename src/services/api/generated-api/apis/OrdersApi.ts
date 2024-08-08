@@ -30,6 +30,11 @@ export interface OrdersCreateRequest {
     data: OrderCreate;
 }
 
+export interface OrdersListRequest {
+    shippingStartDate?: string;
+    shippingEndDate?: string;
+}
+
 export interface OrdersUpdateDeliveredRequest {
     id: string;
     data: OrderUpdateDelivered;
@@ -76,8 +81,16 @@ export class OrdersApi extends runtime.BaseAPI {
 
     /**
      */
-    async ordersListRaw(): Promise<runtime.ApiResponse<Array<Order>>> {
+    async ordersListRaw(requestParameters: OrdersListRequest): Promise<runtime.ApiResponse<Array<Order>>> {
         const queryParameters: any = {};
+
+        if (requestParameters.shippingStartDate !== undefined) {
+            queryParameters['shipping_start_date'] = requestParameters.shippingStartDate;
+        }
+
+        if (requestParameters.shippingEndDate !== undefined) {
+            queryParameters['shipping_end_date'] = requestParameters.shippingEndDate;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -96,8 +109,8 @@ export class OrdersApi extends runtime.BaseAPI {
 
     /**
      */
-    async ordersList(): Promise<Array<Order>> {
-        const response = await this.ordersListRaw();
+    async ordersList(requestParameters: OrdersListRequest): Promise<Array<Order>> {
+        const response = await this.ordersListRaw(requestParameters);
         return await response.value();
     }
 

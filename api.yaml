@@ -56,7 +56,15 @@ paths:
     get:
       operationId: orders_list
       description: ''
-      parameters: []
+      parameters:
+      - name: shipping_start_date
+        in: query
+        description: shipping_start_date
+        type: string
+      - name: shipping_end_date
+        in: query
+        description: shipping_date
+        type: string
       responses:
         '200':
           description: ''

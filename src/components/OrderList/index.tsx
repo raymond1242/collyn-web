@@ -1,4 +1,4 @@
-import { Table, Button, Switch, Tag, DatePicker } from "antd";
+import { Table, Button, Tag, DatePicker } from "antd";
 import type { TableProps } from "antd";
 import moment from "moment";
 import { useState, useEffect } from "react";
@@ -10,12 +10,21 @@ import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 
 const { RangePicker } = DatePicker;
 
+interface FilterButtons {
+  label: string;
+  startDate: string;
+  endDate: string;
+}
+
 export default function OrderList () {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingOrders, setLoadingOrders] = useState(false);
   const router = useRouter();
   const ordersApi = OrdersApiService();
   const [currentFilter, setCurrentFilter] = useState(1);
+  const [filterStartDate, setFilterStartDate] = useState(moment().format('YYYY-MM-DD'));
+  const [filterEndDate, setFilterEndDate] = useState(moment().add(1, 'day').format('YYYY-MM-DD'));
 
   const columns: TableProps<Order>["columns"] = [
     {
@@ -116,19 +125,43 @@ export default function OrderList () {
   ];
 
   useEffect(() => {
-    ordersApi.ordersList().then((response) => {
+    setLoadingOrders(true);
+    ordersApi.ordersList(
+      {
+        shippingStartDate: filterStartDate,
+        shippingEndDate: filterEndDate
+      }
+    ).then((response) => {
       setOrders(response);
+      setLoadingOrders(false);
     }).catch((error) => {
       console.error(error);
+      setLoadingOrders(false);
     });
-  }, []);
+  }, [filterStartDate]);
 
-  const dateFilter = [
-    "Hoy",
-    "Mañana",
-    "Próximos 7 días",
-    "Próximos 30 días",
-  ]
+  const dateFilter: FilterButtons[] = [
+    {
+      label: "Hoy",
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().add(1, 'day').format('YYYY-MM-DD')
+    },
+    {
+      label: "Mañana",
+      startDate: moment().add(1, 'day').format('YYYY-MM-DD'),
+      endDate: moment().add(2, 'day').format('YYYY-MM-DD')
+    },
+    {
+      label: "Próximos 7 días",
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().add(7, 'day').format('YYYY-MM-DD')
+    },
+    {
+      label: "Próximos 30 días",
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().add(30, 'day').format('YYYY-MM-DD')
+    },
+  ];
 
   return (
     <section className="grid gap-4 py-2">
@@ -146,17 +179,21 @@ export default function OrderList () {
           Crear pedido
         </Button>
         <div className="flex flex-wrap gap-2 items-center">
-          {dateFilter.map((date, key) => (
+          {dateFilter.map((date: FilterButtons, key: number) => (
             <Button
               key={key}
               className="rounded-lg"
-              onClick={() => setCurrentFilter(key + 1)}
+              onClick={() => {
+                setCurrentFilter(key + 1)
+                setFilterStartDate(date.startDate)
+                setFilterEndDate(date.endDate)
+              }}
               type={currentFilter === key + 1 ? "primary" : "default"}
             >
-              {date}
+              {date.label}
             </Button>
           ))}
-          <RangePicker className="rounded-lg text-primary border-primary border" />
+          <RangePicker disabled className="rounded-lg text-primary border-primary border" />
         </div>
       </div>
       <div className="w-full overflow-x-auto">
@@ -165,6 +202,7 @@ export default function OrderList () {
           columns={columns}
           pagination={false}
           size="middle"
+          loading={loadingOrders}
           className="hover:cursor-pointer"
           rowKey={(record) => record.id as string}
           locale={{emptyText: 'No hay pedidos'}}
