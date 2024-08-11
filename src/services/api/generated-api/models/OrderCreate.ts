@@ -30,6 +30,12 @@ export interface OrderCreate {
      * @type {string}
      * @memberof OrderCreate
      */
+    product?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderCreate
+     */
     description: string;
     /**
      * 
@@ -104,6 +110,7 @@ export function OrderCreateFromJSONTyped(json: any, ignoreDiscriminator: boolean
     return {
         
         'name': json['name'],
+        'product': !exists(json, 'product') ? undefined : json['product'],
         'description': json['description'],
         'price': !exists(json, 'price') ? undefined : json['price'],
         'advancePayment': !exists(json, 'advance_payment') ? undefined : json['advance_payment'],
@@ -128,6 +135,7 @@ export function OrderCreateToJSON(value?: OrderCreate | null): any {
     return {
         
         'name': value.name,
+        'product': value.product,
         'description': value.description,
         'price': value.price,
         'advance_payment': value.advancePayment,

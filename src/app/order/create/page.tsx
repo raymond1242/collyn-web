@@ -25,7 +25,7 @@ export default function CreateOrder() {
   }, [price, advancePayment]);
 
   const buildShippingDate = (date: string, time: string): string => {
-    const dateTime = moment(date + ' ' + time, 'YY-MM-DD HH:mm');
+    const dateTime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm');
     return dateTime.format('YYYY-MM-DDThh:mm');
 
   }
@@ -49,6 +49,7 @@ export default function CreateOrder() {
 
     const formData = new FormData();
     formData.append('name', values.name);
+    formData.append('product', values.product);
     formData.append('description', values.description);
     formData.append('price', values.price);
     formData.append('advance_payment', String(advancePayment));
@@ -64,7 +65,7 @@ export default function CreateOrder() {
 
     createOrder(formData).then((response) => {
       setLoading(false);
-      console.log(response);
+      router.push('/order');
     }).catch((error) => {
       setLoading(false);
       console.error(error);
@@ -128,6 +129,17 @@ export default function CreateOrder() {
               rules={[{ required: true, message: "Por favor ingrese un nombre" }]}
             >
               <Input className="border-primary" />
+            </Form.Item>
+            <Form.Item
+              name="product"
+              label="Producto"
+              rules={[{ required: true, message: "Por favor ingrese los productos" }]}
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder="Productos"
+                className="border-primary"
+              />
             </Form.Item>
             <Form.Item
               name="description"

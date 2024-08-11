@@ -49,6 +49,12 @@ export interface Order {
      * @type {string}
      * @memberof Order
      */
+    product?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Order
+     */
     description: string;
     /**
      * 
@@ -137,6 +143,7 @@ export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Ord
         'id': !exists(json, 'id') ? undefined : json['id'],
         'images': !exists(json, 'images') ? undefined : ((json['images'] as Array<any>).map(OrderImageFromJSON)),
         'name': json['name'],
+        'product': !exists(json, 'product') ? undefined : json['product'],
         'description': json['description'],
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
@@ -163,6 +170,7 @@ export function OrderToJSON(value?: Order | null): any {
     return {
         
         'name': value.name,
+        'product': value.product,
         'description': value.description,
         'price': value.price,
         'advance_payment': value.advancePayment,

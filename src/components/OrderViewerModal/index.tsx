@@ -49,7 +49,13 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
                 <></>
               )}
             </div>
+            <div className="border border-neutral-500"></div>
+            <p className="whitespace-pre-wrap text-base font-light">
+              {record.product}
+            </p>
+            <div className="border border-neutral-500"></div>
             <p className="text-[15px] font-light">{record.description}</p>
+            <div className="border border-neutral-500"></div>
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col">
