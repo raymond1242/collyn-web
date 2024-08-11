@@ -9,6 +9,20 @@
   --secondary: #DFDFDF;
 }
 
+.blink {
+  animation: blink-animation 2.5s infinite;
+}
+
+@keyframes blink-animation {
+  0% {
+    @apply bg-orange-400;
+  }
+}
+
+.ant-select-selector {
+  @apply border-primary !important;
+}
+
 @media (max-width: 992px) {
   .ant-picker-panel:last-child .ant-picker-date-panel {
     display: none !important;

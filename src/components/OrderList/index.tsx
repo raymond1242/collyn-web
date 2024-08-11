@@ -1,4 +1,4 @@
-import { Table, Button, Tag, DatePicker } from "antd";
+import { Table, Button, Tag, DatePicker, Select } from "antd";
 import type { TableProps } from "antd";
 import moment from "moment";
 import { useState, useEffect } from "react";
@@ -23,8 +23,10 @@ export default function OrderList () {
   const router = useRouter();
   const ordersApi = OrdersApiService();
   const [currentFilter, setCurrentFilter] = useState(1);
-  const [filterStartDate, setFilterStartDate] = useState(moment().format('YYYY-MM-DD'));
-  const [filterEndDate, setFilterEndDate] = useState(moment().add(1, 'day').format('YYYY-MM-DD'));
+  const [filterDate, setFilterDate] = useState({
+    start: moment().format('YYYY-MM-DD'),
+    end: moment().add(1, 'day').format('YYYY-MM-DD')
+  });
 
   const columns: TableProps<Order>["columns"] = [
     {
@@ -102,6 +104,7 @@ export default function OrderList () {
       title:"PROD",
       dataIndex: "hasProduction",
       key: "hasProduction",
+      sorter: (a: Order, b: Order) => Number(a.hasProduction) - Number(b.hasProduction),
       render: (text: boolean) => text ? (
         <div className="text-center">
           <Tag className="rounded-md bg-primary text-white border-primary">Si</Tag>
@@ -116,6 +119,8 @@ export default function OrderList () {
       title: "Entregado",
       dataIndex: "delivered",
       key: "delivered",
+      defaultSortOrder: "ascend",
+      sorter: (a: Order, b: Order) => Number(a.delivered) - Number(b.delivered),
       render: (delivered: boolean, record) => (
         <div className="text-center">
           <SwitchConfirmModal checked={delivered} record={record} orders={orders} setOrders={setOrders} />
@@ -128,8 +133,8 @@ export default function OrderList () {
     setLoadingOrders(true);
     ordersApi.ordersList(
       {
-        shippingStartDate: filterStartDate,
-        shippingEndDate: filterEndDate
+        shippingStartDate: filterDate.start,
+        shippingEndDate: filterDate.end
       }
     ).then((response) => {
       setOrders(response);
@@ -138,7 +143,7 @@ export default function OrderList () {
       console.error(error);
       setLoadingOrders(false);
     });
-  }, [filterStartDate]);
+  }, [filterDate]);
 
   const dateFilter: FilterButtons[] = [
     {
@@ -178,29 +183,51 @@ export default function OrderList () {
         >
           Crear pedido
         </Button>
-        <div className="flex flex-wrap gap-2 items-center">
-          {dateFilter.map((date: FilterButtons, key: number) => (
-            <Button
-              key={key}
-              className="rounded-lg"
-              onClick={() => {
-                setCurrentFilter(key + 1)
-                setFilterStartDate(date.startDate)
-                setFilterEndDate(date.endDate)
-              }}
-              type={currentFilter === key + 1 ? "primary" : "default"}
-            >
-              {date.label}
-            </Button>
-          ))}
-          <RangePicker disabled className="rounded-lg text-primary border-primary border" />
+        <div className="flex justify-between lg:flex-row flex-col gap-4">
+          <Select
+            defaultValue={1}
+            className="w-40"
+            options={[
+              { value: 1, label: "Ucayali" },
+              { value: 2, label: "Central" },
+              { value: 3, label: "Loreto" },
+              { value: 4, label: "Esquina" },
+              { value: 5, label: "Alameda" },
+            ]}
+          />
+          <div className="flex flex-wrap gap-3">
+            {dateFilter.map((date: FilterButtons, key: number) => (
+              <Button
+                key={key}
+                className="rounded-lg"
+                onClick={() => {
+                  setCurrentFilter(key + 1)
+                  setFilterDate({
+                    start: date.startDate,
+                    end: date.endDate
+                  })
+                }}
+                type={currentFilter === key + 1 ? "primary" : "default"}
+              >
+                {date.label}
+              </Button>
+            ))}
+            <RangePicker
+              disabled
+              className="rounded-lg text-primary border-primary border"
+            />
+          </div>
         </div>
       </div>
       <div className="w-full overflow-x-auto">
         <Table
           dataSource={orders}
           columns={columns}
-          pagination={false}
+          rowClassName={
+            (record: Order) => (
+              record.delivered ? '' : record.shippingDate > moment().add(20, "minutes").toDate() ? '' : 'blink'
+            )
+          }
           size="middle"
           loading={loadingOrders}
           className="hover:cursor-pointer"

@@ -46,7 +46,7 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
       <Modal
         centered
         open={openModal}
-        width={460}
+        width={480}
         onCancel={() => setOpenModal(false)}
         onOk={() => {
           setOpenModal(false)
@@ -65,6 +65,19 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
               {!checked ? 'entregado' : 'no entregado'}.
             </span>
           </p>
+          {Number(record.pendingPayment) === 0 && (
+            <p className="text-base text-green-600">
+              No hay monto pendiente de pago.
+            </p>
+          )}
+          {!checked && Number(record.pendingPayment) > 0 && (
+            <p className="text-lg font-light">
+              El cliente tiene un monto pendiente de pago de
+              <span className="text-red-500 text-xl px-1.5 font-semibold">
+                S/.{record.pendingPayment}
+              </span>
+            </p>
+          )}
           <p className="text-lg font-medium">¿Estás seguro de continuar?</p>
           <div className="grid grid-cols-2 gap-2 mt-2">
             <Button
@@ -73,13 +86,13 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
               loading={loading}
               onClick={() => onConfirm()}
             >
-              Confirmar
+              Si, continuar
             </Button>
             <Button
               size="large"
               onClick={() => setOpenModal(false)}
             >
-              Cancelar
+              No, cancelar
             </Button>
           </div>
         </div>
