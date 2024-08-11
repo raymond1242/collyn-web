@@ -92,7 +92,7 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
                   <p className="text-title">Pendiente</p>
                   {Number(record.pendingPayment) > 0 ? (
                     <p className="text-3xl font-medium text-red-500">
-                      {record.advancePayment}
+                      {record.pendingPayment}
                     </p>
                   ) : (
                     <p className="text-2xl font-normal text-neutral-500">

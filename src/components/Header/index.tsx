@@ -24,7 +24,6 @@ export default function Header () {
   } = useAuthContext();
 
   useEffect(() => {
-    setImageLoading(true);
     const token = AuthService.getAuthToken();
     if (token) {
       verifyToken();
@@ -38,6 +37,7 @@ export default function Header () {
       setCompanyName(response.name);
       setCompanyLogo(response.logo as string);
       setIsAuthenticated(true);
+      setImageLoading(true);
       router.push('/order');
     }).catch((error) => {
       console.log(error);

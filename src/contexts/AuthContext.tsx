@@ -21,7 +21,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const router = useRouter();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [companyName, setCompanyName] = useState('');
   const [companyLogo, setCompanyLogo] = useState('');
 
