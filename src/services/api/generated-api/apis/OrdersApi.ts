@@ -33,6 +33,7 @@ export interface OrdersCreateRequest {
 export interface OrdersListRequest {
     shippingStartDate?: string;
     shippingEndDate?: string;
+    shippingPlace?: string;
 }
 
 export interface OrdersUpdateDeliveredRequest {
@@ -90,6 +91,10 @@ export class OrdersApi extends runtime.BaseAPI {
 
         if (requestParameters.shippingEndDate !== undefined) {
             queryParameters['shipping_end_date'] = requestParameters.shippingEndDate;
+        }
+
+        if (requestParameters.shippingPlace !== undefined) {
+            queryParameters['shipping_place'] = requestParameters.shippingPlace;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

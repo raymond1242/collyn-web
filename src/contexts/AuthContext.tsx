@@ -17,11 +17,11 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthPage, setIsAuthPage] = useState(true);
+  const [isAuthPage, setIsAuthPage] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [companyName, setCompanyName] = useState('');
   const [companyLogo, setCompanyLogo] = useState('');
 

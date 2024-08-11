@@ -33,8 +33,8 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
                 src={image.image!}
                 alt="Order image"
                 width={350}
-                height={100}
-                className="rounded-xl bg-red-100 border"
+                height={300}
+                className="rounded-xl bg-neutral-100 border"
               />
             ))}
           </div>
