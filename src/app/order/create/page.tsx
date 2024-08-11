@@ -12,7 +12,6 @@ interface ImageFile {
   file: File;
 }
 
-
 export default function CreateOrder() {
   const [form] = Form.useForm();
   const router = useRouter();
@@ -128,14 +127,18 @@ export default function CreateOrder() {
               label="Nombre"
               rules={[{ required: true, message: "Por favor ingrese un nombre" }]}
             >
-              <Input />
+              <Input className="border-primary" />
             </Form.Item>
             <Form.Item
               name="description"
               label="Descripción"
               rules={[{ required: true, message: "Por favor ingrese una descripción" }]}
             >
-              <Input.TextArea rows={4} placeholder="Descripción" />
+              <Input.TextArea
+                rows={4}
+                placeholder="Descripción"
+                className="border-primary"
+              />
             </Form.Item>
             <div className="grid grid-cols-2 gap-4">
               <Form.Item
@@ -168,7 +171,12 @@ export default function CreateOrder() {
                 initialValue={price}
                 rules={[{ required: true, message: "Por favor ingrese un precio" }]}
               >
-                <Input min={1} type="number" onChange={(e) => setPrice(Number(e.target.value))} className="w-full" />
+                <Input
+                  min={1}
+                  type="number"
+                  className="w-full border-primary"
+                  onChange={(e) => setPrice(Number(e.target.value))}
+                />
               </Form.Item>
               <Form.Item
                 name="advancePayment"
@@ -176,13 +184,23 @@ export default function CreateOrder() {
                 initialValue={advancePayment}
                 rules={[{ required: true, message: "Por favor ingrese una cantidad" }]}
               >
-                <Input min={0} max={price} type="number" onChange={(e) => setAdvancePayment(Number(e.target.value))} className="w-full" />
+                <Input
+                  min={0}
+                  max={price}
+                  type="number"
+                  className="w-full border-primary"
+                  onChange={(e) => setAdvancePayment(Number(e.target.value))}
+                />
               </Form.Item>
               <Form.Item
                 name="pendingPayment"
                 label="Pendiente"
               >
-                <p className="border border-neutral-300 py-2 px-3 bg-neutral-100 rounded-md w-40">{pendingPayment}</p>
+                <p
+                  className="border border-neutral-300 py-2 px-3 bg-neutral-100 rounded-md w-40"
+                >
+                  {pendingPayment}
+                </p>
               </Form.Item>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -192,7 +210,7 @@ export default function CreateOrder() {
                 initialValue={moment().format('MM/DD/YY')}
                 rules={[{ required: true, message: "Por favor ingrese una fecha de entrega" }]}
               >
-                <Input type="date" min={moment().format('MM/DD/YY')} /> 
+                <Input type="date" className="border-primary" min={moment().format('MM/DD/YY')} /> 
               </Form.Item>
               <Form.Item
                 name="deliveryTime"
@@ -200,7 +218,7 @@ export default function CreateOrder() {
                 initialValue={moment().format('HH:mm')}
                 rules={[{ required: true, message: "Por favor ingrese una hora de entrega" }]}
               >
-                <Input type="time" />
+                <Input className="border-primary" type="time" />
               </Form.Item>
             </div>
             <Form.Item
