@@ -73,8 +73,8 @@ export default function OrderList () {
     },
     {
       title: "Recepción",
-      dataIndex: "shippingPlace",
-      key: "location",
+      dataIndex: "registrationPlace",
+      key: "registrationPlace",
       render: (text: string) => <p>{text}</p>,
     },
     {
@@ -232,7 +232,7 @@ export default function OrderList () {
           columns={columns}
           rowClassName={
             (record: Order) => (
-              record.delivered ? '' : record.shippingDate > moment().add(20, "minutes").toDate() ? '' : 'blink'
+              record.delivered ? '' : record.shippingDate > moment().add(25, "minutes").toDate() ? '' : 'blink'
             )
           }
           size="middle"
