@@ -13,161 +13,112 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    OrderImage,
-    OrderImageFromJSON,
-    OrderImageFromJSONTyped,
-    OrderImageToJSON,
-} from './';
-
 /**
  * 
  * @export
- * @interface Order
+ * @interface OrderUpdateAdmin
  */
-export interface Order {
+export interface OrderUpdateAdmin {
     /**
      * 
      * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
-    readonly id?: string;
-    /**
-     * 
-     * @type {Array<OrderImage>}
-     * @memberof Order
-     */
-    readonly images?: Array<OrderImage>;
+    name?: string;
     /**
      * 
      * @type {string}
-     * @memberof Order
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
     product?: string;
     /**
      * 
      * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
-    description: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Order
-     */
-    readonly createdAt?: Date;
-    /**
-     * 
-     * @type {Date}
-     * @memberof Order
-     */
-    readonly updatedAt?: Date;
+    description?: string;
     /**
      * 
      * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
     price?: string;
     /**
      * 
      * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
     advancePayment?: string;
     /**
      * 
      * @type {string}
-     * @memberof Order
-     */
-    discount?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
     pendingPayment?: string;
     /**
      * 
      * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
-    registrationPlace: string;
+    registrationPlace?: string;
     /**
      * 
      * @type {string}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
-    shippingPlace: string;
+    shippingPlace?: string;
     /**
      * 
      * @type {Date}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
-    shippingDate: Date;
+    shippingDate?: Date;
     /**
      * 
      * @type {boolean}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
     hasProduction?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
     hasDelivery?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof Order
+     * @memberof OrderUpdateAdmin
      */
     completed?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof Order
-     */
-    company: number;
 }
 
-export function OrderFromJSON(json: any): Order {
-    return OrderFromJSONTyped(json, false);
+export function OrderUpdateAdminFromJSON(json: any): OrderUpdateAdmin {
+    return OrderUpdateAdminFromJSONTyped(json, false);
 }
 
-export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Order {
+export function OrderUpdateAdminFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderUpdateAdmin {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'images': !exists(json, 'images') ? undefined : ((json['images'] as Array<any>).map(OrderImageFromJSON)),
-        'name': json['name'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
         'product': !exists(json, 'product') ? undefined : json['product'],
-        'description': json['description'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
-        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
+        'description': !exists(json, 'description') ? undefined : json['description'],
         'price': !exists(json, 'price') ? undefined : json['price'],
         'advancePayment': !exists(json, 'advance_payment') ? undefined : json['advance_payment'],
-        'discount': !exists(json, 'discount') ? undefined : json['discount'],
         'pendingPayment': !exists(json, 'pending_payment') ? undefined : json['pending_payment'],
-        'registrationPlace': json['registration_place'],
-        'shippingPlace': json['shipping_place'],
-        'shippingDate': (new Date(json['shipping_date'])),
+        'registrationPlace': !exists(json, 'registration_place') ? undefined : json['registration_place'],
+        'shippingPlace': !exists(json, 'shipping_place') ? undefined : json['shipping_place'],
+        'shippingDate': !exists(json, 'shipping_date') ? undefined : (new Date(json['shipping_date'])),
         'hasProduction': !exists(json, 'has_production') ? undefined : json['has_production'],
         'hasDelivery': !exists(json, 'has_delivery') ? undefined : json['has_delivery'],
         'completed': !exists(json, 'completed') ? undefined : json['completed'],
-        'company': json['company'],
     };
 }
 
-export function OrderToJSON(value?: Order | null): any {
+export function OrderUpdateAdminToJSON(value?: OrderUpdateAdmin | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -181,15 +132,13 @@ export function OrderToJSON(value?: Order | null): any {
         'description': value.description,
         'price': value.price,
         'advance_payment': value.advancePayment,
-        'discount': value.discount,
         'pending_payment': value.pendingPayment,
         'registration_place': value.registrationPlace,
         'shipping_place': value.shippingPlace,
-        'shipping_date': (value.shippingDate.toISOString()),
+        'shipping_date': value.shippingDate === undefined ? undefined : (value.shippingDate.toISOString()),
         'has_production': value.hasProduction,
         'has_delivery': value.hasDelivery,
         'completed': value.completed,
-        'company': value.company,
     };
 }
 

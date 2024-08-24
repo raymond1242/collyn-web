@@ -33,9 +33,9 @@ export default function Header () {
   }, []);
 
   const verifyToken = () => {
-    companyApi.companyRead({ username: AuthService.getUserName() as string }).then((response) => {
+    companyApi.companyRead({ user: AuthService.getUserName() as string }).then((response) => {
       setCompanyName(response.name);
-      setCompanyLogo(response.logo as string);
+      setCompanyLogo(response.company.logo as string);
       setIsAuthenticated(true);
       setImageLoading(true);
       router.push('/order');

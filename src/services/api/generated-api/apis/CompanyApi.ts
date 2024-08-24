@@ -15,13 +15,13 @@
 
 import * as runtime from '../runtime';
 import {
-    Company,
-    CompanyFromJSON,
-    CompanyToJSON,
+    UserCompany,
+    UserCompanyFromJSON,
+    UserCompanyToJSON,
 } from '../models';
 
 export interface CompanyReadRequest {
-    username: string;
+    user: string;
 }
 
 /**
@@ -31,9 +31,9 @@ export class CompanyApi extends runtime.BaseAPI {
 
     /**
      */
-    async companyReadRaw(requestParameters: CompanyReadRequest): Promise<runtime.ApiResponse<Company>> {
-        if (requestParameters.username === null || requestParameters.username === undefined) {
-            throw new runtime.RequiredError('username','Required parameter requestParameters.username was null or undefined when calling companyRead.');
+    async companyReadRaw(requestParameters: CompanyReadRequest): Promise<runtime.ApiResponse<UserCompany>> {
+        if (requestParameters.user === null || requestParameters.user === undefined) {
+            throw new runtime.RequiredError('user','Required parameter requestParameters.user was null or undefined when calling companyRead.');
         }
 
         const queryParameters: any = {};
@@ -44,18 +44,18 @@ export class CompanyApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
         }
         const response = await this.request({
-            path: `/company/{username}`.replace(`{${"username"}}`, encodeURIComponent(String(requestParameters.username))),
+            path: `/company/{user}`.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters.user))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CompanyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserCompanyFromJSON(jsonValue));
     }
 
     /**
      */
-    async companyRead(requestParameters: CompanyReadRequest): Promise<Company> {
+    async companyRead(requestParameters: CompanyReadRequest): Promise<UserCompany> {
         const response = await this.companyReadRaw(requestParameters);
         return await response.value();
     }

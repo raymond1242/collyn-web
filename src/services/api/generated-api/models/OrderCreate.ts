@@ -90,13 +90,13 @@ export interface OrderCreate {
      * @type {boolean}
      * @memberof OrderCreate
      */
-    delivered?: boolean;
+    hasDelivery?: boolean;
     /**
      * 
      * @type {Array<string>}
      * @memberof OrderCreate
      */
-    images: Array<string>;
+    images?: Array<string>;
 }
 
 export function OrderCreateFromJSON(json: any): OrderCreate {
@@ -120,8 +120,8 @@ export function OrderCreateFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'shippingPlace': json['shipping_place'],
         'shippingDate': (new Date(json['shipping_date'])),
         'hasProduction': !exists(json, 'has_production') ? undefined : json['has_production'],
-        'delivered': !exists(json, 'delivered') ? undefined : json['delivered'],
-        'images': json['images'],
+        'hasDelivery': !exists(json, 'has_delivery') ? undefined : json['has_delivery'],
+        'images': !exists(json, 'images') ? undefined : json['images'],
     };
 }
 
@@ -145,7 +145,7 @@ export function OrderCreateToJSON(value?: OrderCreate | null): any {
         'shipping_place': value.shippingPlace,
         'shipping_date': (value.shippingDate.toISOString()),
         'has_production': value.hasProduction,
-        'delivered': value.delivered,
+        'has_delivery': value.hasDelivery,
         'images': value.images,
     };
 }

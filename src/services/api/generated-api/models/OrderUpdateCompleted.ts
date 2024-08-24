@@ -16,32 +16,32 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface OrderUpdateDelivered
+ * @interface OrderUpdateCompleted
  */
-export interface OrderUpdateDelivered {
+export interface OrderUpdateCompleted {
     /**
      * 
      * @type {boolean}
-     * @memberof OrderUpdateDelivered
+     * @memberof OrderUpdateCompleted
      */
-    delivered?: boolean;
+    completed?: boolean;
 }
 
-export function OrderUpdateDeliveredFromJSON(json: any): OrderUpdateDelivered {
-    return OrderUpdateDeliveredFromJSONTyped(json, false);
+export function OrderUpdateCompletedFromJSON(json: any): OrderUpdateCompleted {
+    return OrderUpdateCompletedFromJSONTyped(json, false);
 }
 
-export function OrderUpdateDeliveredFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderUpdateDelivered {
+export function OrderUpdateCompletedFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderUpdateCompleted {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'delivered': !exists(json, 'delivered') ? undefined : json['delivered'],
+        'completed': !exists(json, 'completed') ? undefined : json['completed'],
     };
 }
 
-export function OrderUpdateDeliveredToJSON(value?: OrderUpdateDelivered | null): any {
+export function OrderUpdateCompletedToJSON(value?: OrderUpdateCompleted | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +50,7 @@ export function OrderUpdateDeliveredToJSON(value?: OrderUpdateDelivered | null):
     }
     return {
         
-        'delivered': value.delivered,
+        'completed': value.completed,
     };
 }
 

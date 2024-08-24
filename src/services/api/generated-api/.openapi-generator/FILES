@@ -8,9 +8,11 @@ models/Company.ts
 models/Order.ts
 models/OrderCreate.ts
 models/OrderImage.ts
-models/OrderUpdateDelivered.ts
+models/OrderUpdateAdmin.ts
+models/OrderUpdateCompleted.ts
 models/Token.ts
 models/User.ts
+models/UserCompany.ts
 models/UserLogin.ts
 models/index.ts
 runtime.ts

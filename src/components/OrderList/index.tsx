@@ -121,7 +121,7 @@ export default function OrderList () {
       dataIndex: "delivered",
       key: "delivered",
       defaultSortOrder: "ascend",
-      sorter: (a: Order, b: Order) => Number(a.delivered) - Number(b.delivered),
+      sorter: (a: Order, b: Order) => Number(a.completed) - Number(b.completed),
       render: (delivered: boolean, record) => (
         <div className="text-center">
           <SwitchConfirmModal checked={delivered} record={record} orders={orders} setOrders={setOrders} />
@@ -232,7 +232,7 @@ export default function OrderList () {
           columns={columns}
           rowClassName={
             (record: Order) => (
-              record.delivered ? '' : record.shippingDate > moment().add(25, "minutes").toDate() ? '' : 'blink'
+              record.completed ? '' : record.shippingDate > moment().add(25, "minutes").toDate() ? '' : 'blink'
             )
           }
           size="middle"
