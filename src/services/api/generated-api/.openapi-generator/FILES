@@ -13,6 +13,7 @@ models/OrderUpdateCompleted.ts
 models/Token.ts
 models/User.ts
 models/UserCompany.ts
+models/UserCompanyStore.ts
 models/UserLogin.ts
 models/index.ts
 runtime.ts

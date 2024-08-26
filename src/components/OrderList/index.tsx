@@ -4,9 +4,10 @@ import moment from "moment";
 import { useState, useEffect } from "react";
 import { EditFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { Order, OrdersApiService } from "@/services";
+import { Order, OrdersApiService, CompanyApiService } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 const { RangePicker } = DatePicker;
 
@@ -20,14 +21,50 @@ export default function OrderList () {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
-  const router = useRouter();
-  const ordersApi = OrdersApiService();
   const [currentFilter, setCurrentFilter] = useState(1);
   const [filterLocation, setFilterLocation] = useState("");
+  const [loadingLocations, setLoadingLocations] = useState(true);
+  const [locationOptions, setLocationOptions] = useState<Array<{ value: string, label: string }>>([]);
   const [filterDate, setFilterDate] = useState({
     start: moment().format('YYYY-MM-DD'),
     end: moment().add(1, 'day').format('YYYY-MM-DD')
   });
+
+  const router = useRouter();
+  const ordersApi = OrdersApiService();
+  const companyApi = CompanyApiService();
+  const { setCompanyStores } = useAuthContext();
+
+  useEffect(() => {
+    setLoadingOrders(true);
+    ordersApi.ordersList(
+      {
+        shippingStartDate: filterDate.start,
+        shippingEndDate: filterDate.end,
+        shippingPlace: filterLocation
+      }
+    ).then((response) => {
+      setOrders(response);
+      setLoadingOrders(false);
+    }).catch((error) => {
+      console.error(error);
+      setLoadingOrders(false);
+    });
+  }, [filterDate, filterLocation]);
+
+  useEffect(() => {
+    companyApi.companyStores().then((response) => {
+      setCompanyStores(response);
+      let options = response.map(store => ({ value: store.name, label: store.name }))
+      options = [...options, { value: "", label: "Todos" }];
+      setLocationOptions(options);
+      setLoadingLocations(false);
+    }).catch((error) => {
+      setLocationOptions([...locationOptions, { value: "", label: "Todos" }]);
+      setLoadingLocations(false);
+      console.error(error);
+    });
+  }, []);
 
   const columns: TableProps<Order>["columns"] = [
     {
@@ -118,34 +155,25 @@ export default function OrderList () {
     },
     {
       title: "Entregado",
-      dataIndex: "delivered",
-      key: "delivered",
+      dataIndex: "completed",
+      key: "completed",
       defaultSortOrder: "ascend",
       sorter: (a: Order, b: Order) => Number(a.completed) - Number(b.completed),
-      render: (delivered: boolean, record) => (
+      render: (completed: boolean, record) => (
         <div className="text-center">
-          <SwitchConfirmModal checked={delivered} record={record} orders={orders} setOrders={setOrders} />
+          <SwitchConfirmModal checked={completed} record={record} orders={orders} setOrders={setOrders} />
         </div>
       ),
     }
   ];
 
-  useEffect(() => {
-    setLoadingOrders(true);
-    ordersApi.ordersList(
-      {
-        shippingStartDate: filterDate.start,
-        shippingEndDate: filterDate.end,
-        shippingPlace: filterLocation
-      }
-    ).then((response) => {
-      setOrders(response);
-      setLoadingOrders(false);
-    }).catch((error) => {
-      console.error(error);
-      setLoadingOrders(false);
-    });
-  }, [filterDate, filterLocation]);
+  const onChangeDateRange = (dates: any) => {
+    setFilterDate({
+      start: dates[0].format('YYYY-MM-DD'),
+      end: dates[1].format('YYYY-MM-DD')
+    })
+    setCurrentFilter(0);
+  }
 
   const dateFilter: FilterButtons[] = [
     {
@@ -190,19 +218,12 @@ export default function OrderList () {
             <p className="text-base font-light">Filtra por tienda</p>
             <Select
               defaultValue={filterLocation}
+              loading={loadingLocations}
               className="w-40"
               onChange={(value: string) => setFilterLocation(value)}
-              options={[
-                { value: "", label: "Todos" },
-                { value: "Ucayali", label: "Ucayali" },
-                { value: "Central", label: "Central" },
-                { value: "Loreto", label: "Loreto" },
-                { value: "Esquina", label: "Esquina" },
-                { value: "Alameda", label: "Alameda" },
-              ]}
+              options={locationOptions}
             />
           </div>
-
           <div className="flex flex-wrap gap-3">
             {dateFilter.map((date: FilterButtons, key: number) => (
               <Button
@@ -222,6 +243,7 @@ export default function OrderList () {
             ))}
             <RangePicker
               className="rounded-lg text-primary border-primary border"
+              onChange={onChangeDateRange}
             />
           </div>
         </div>

@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { useEffect, useState, useContext, createContext } from "react";
 import { usePathname } from 'next/navigation';
 import { useRouter } from "next/navigation";
+import { UserCompanyStore } from "@/services";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -12,6 +13,8 @@ interface AuthContextType {
   setCompanyName: (value: string) => void;
   companyLogo: string;
   setCompanyLogo: (value: string) => void;
+  companyStores: Array<UserCompanyStore>;
+  setCompanyStores: (value: Array<UserCompanyStore>) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,11 +27,13 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [companyName, setCompanyName] = useState('');
   const [companyLogo, setCompanyLogo] = useState('');
+  const [companyStores, setCompanyStores] = useState<Array<UserCompanyStore>>([]);
 
   useEffect(() => {
     if (!isAuthenticated && pathname.includes("/order")) {
       setCompanyName('');
       setCompanyLogo('');
+      // tODO: veriffy if exists a token and verify it
       router.push('/auth');
     }
 
@@ -48,6 +53,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         setCompanyName,
         companyLogo,
         setCompanyLogo,
+        companyStores,
+        setCompanyStores,
       }}
     >
       {!isAuthPage && <Header />}

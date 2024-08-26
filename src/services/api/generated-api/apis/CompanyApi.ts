@@ -18,6 +18,9 @@ import {
     UserCompany,
     UserCompanyFromJSON,
     UserCompanyToJSON,
+    UserCompanyStore,
+    UserCompanyStoreFromJSON,
+    UserCompanyStoreToJSON,
 } from '../models';
 
 export interface CompanyReadRequest {
@@ -57,6 +60,33 @@ export class CompanyApi extends runtime.BaseAPI {
      */
     async companyRead(requestParameters: CompanyReadRequest): Promise<UserCompany> {
         const response = await this.companyReadRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async companyStoresRaw(): Promise<runtime.ApiResponse<Array<UserCompanyStore>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/company/stores`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserCompanyStoreFromJSON));
+    }
+
+    /**
+     */
+    async companyStores(): Promise<Array<UserCompanyStore>> {
+        const response = await this.companyStoresRaw();
         return await response.value();
     }
 

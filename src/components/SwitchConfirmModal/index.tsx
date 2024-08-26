@@ -1,4 +1,5 @@
 import { Switch, Modal, Button } from "antd";
+import { CheckOutlined } from "@ant-design/icons";
 import { Order } from "@/services";
 import { useState } from "react";
 import { OrdersApiService } from "@/services";
@@ -17,7 +18,7 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
 
   const ordersApi = OrdersApiService();
 
-  const onChangeDeliveryStatus = (status: boolean, currentOrder: Order) => {
+  const onChangeCompletedStatus = (status: boolean, currentOrder: Order) => {
     setOpenModal(true);
     setStatus(status);
   }
@@ -27,22 +28,27 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
     const requestParamas = {
       id: record.id as string,
       data: {
-        delivered: status
+        completed: status
       }
     }
-    ordersApi.ordersUpdateDelivered(requestParamas).then((response) => {
+    ordersApi.ordersUpdateCompleted(requestParamas).then((response) => {
       setLoading(false);
       setOpenModal(false);
-      setOrders(orders.map(order => (order.id === record.id ? { ...order, delivered: response.delivered } : order)));
+      setOrders(orders.map(order => (order.id === record.id ? { ...order, completed: response.completed } : order)));
     }).catch((error) => {
       setLoading(false);
+      setOpenModal(false);
       console.error(error);
     });
   }
 
   return (
     <>
-      <Switch checked={checked} onChange={(e) => onChangeDeliveryStatus(e, record)} />
+      <Switch
+        checked={checked}
+        checkedChildren={<CheckOutlined />}
+        onChange={(e) => onChangeCompletedStatus(e, record)}
+      />
       <Modal
         centered
         open={openModal}

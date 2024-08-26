@@ -13,6 +13,7 @@ export default function Header () {
   const [imageLoading, setImageLoading] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const companyApi = CompanyApiService();
+  const [userName, setUserName] = useState('');
 
   const {
     companyName,
@@ -34,7 +35,8 @@ export default function Header () {
 
   const verifyToken = () => {
     companyApi.companyRead({ user: AuthService.getUserName() as string }).then((response) => {
-      setCompanyName(response.name);
+      setCompanyName(response.company.name);
+      setUserName(response.name)
       setCompanyLogo(response.company.logo as string);
       setIsAuthenticated(true);
       setImageLoading(true);
@@ -70,8 +72,8 @@ export default function Header () {
         {isAuthenticated ? (
           <div className="flex flex-row items-center gap-3">
             <div className="flex flex-col text-right">
-              <p className="text-base font-medium">{companyName}</p>
-              <p className="text-xs font-extralight">Organización</p>
+              <p className="text-base font-medium">{userName}</p>
+              <p className="text-sm font-extralight">{companyName}</p>
             </div>
             <Spin spinning={imageLoading}>
               {companyLogo && (

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import moment from "moment";
 import 'moment/locale/es';
 import OrderList from "@/components/OrderList";
@@ -8,10 +7,6 @@ import { dmSans } from "@/app/fonts";
 import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons";
 
 export default function Order() {
-  moment().locale('es')
-  const [date, setDate] = useState(moment().format('LL'))
-  const [time, setTime] = useState(moment().format('HH:mm'))
-
   return (
     <main className="flex flex-col lg:px-12 lg:py-6 p-6 bg-white">
       <div className="flex flex-row justify-between items-center py-2 gap-2">

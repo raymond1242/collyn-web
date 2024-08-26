@@ -7,4 +7,5 @@ export * from './OrderUpdateCompleted';
 export * from './Token';
 export * from './User';
 export * from './UserCompany';
+export * from './UserCompanyStore';
 export * from './UserLogin';
