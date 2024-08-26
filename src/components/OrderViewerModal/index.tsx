@@ -105,7 +105,7 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
             <div className="flex items-end gap-2">
               <p className="text-title">Estado:</p>
               <p className="text-xl font-medium">
-                {record.delivered ? 'Entregado' : 'No entregado'}
+                {record.completed ? 'Entregado' : 'No entregado'}
               </p>
             </div>
           </div>

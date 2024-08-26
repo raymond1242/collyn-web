@@ -58,6 +58,7 @@ export default function CreateOrder() {
     formData.append('shipping_place', values.shippingPlace);
     formData.append('shipping_date', shippingDate);
     formData.append('has_production', values.prod ? 'true' : 'false');
+    formData.append('has_delivery', values.delivery ? 'true' : 'false');
 
     for (let i = 0; i < images.length; i++) {
       formData.append('images', images[i].file);
@@ -96,7 +97,7 @@ export default function CreateOrder() {
               }
             }
           >
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <Form.Item
                 name="location"
                 label="Tienda Origen"
@@ -117,6 +118,14 @@ export default function CreateOrder() {
               <Form.Item
                 name="prod"
                 label="Producción"
+                valuePropName="checked"
+                initialValue={false}
+              >
+                <Switch />
+              </Form.Item>
+              <Form.Item
+                name="delivery"
+                label="Con entrega"
                 valuePropName="checked"
                 initialValue={false}
               >

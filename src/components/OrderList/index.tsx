@@ -2,10 +2,10 @@ import { Table, Button, Tag, DatePicker, Select } from "antd";
 import type { TableProps } from "antd";
 import moment from "moment";
 import { useState, useEffect } from "react";
-import { EditFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { Order, OrdersApiService, CompanyApiService } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
+import OrderEditModal from "@/components/OrderEditModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import { useAuthContext } from "@/contexts/AuthContext";
 
@@ -74,11 +74,7 @@ export default function OrderList () {
       width: 100,
       render: (_, record) => (
         <div className="flex gap-3 items-center">
-          <Button
-            disabled
-            className="rounded-full"
-            icon={<EditFilled />}
-          />
+          <OrderEditModal record={record} isAdmin={true} />
           <OrderViewerModal record={record} />
         </div>
       ),

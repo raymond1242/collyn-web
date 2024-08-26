@@ -19,8 +19,16 @@
   }
 }
 
-.ant-select-selector {
-  @apply border-primary !important;
+.enabled-selector {
+  .ant-select-selector {
+    @apply border-primary !important;
+  }
+}
+
+.disabled-selector {
+  .ant-select-selector {
+    @apply border-neutral-300 !important;
+  }
 }
 
 @media (max-width: 992px) {
