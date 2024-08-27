@@ -32,6 +32,12 @@ import {
     OrderUpdateStoreToJSON,
 } from '../models';
 
+export interface OrdersCompletedRequest {
+    shippingStartDate?: string;
+    shippingEndDate?: string;
+    shippingPlace?: string;
+}
+
 export interface OrdersCreateRequest {
     data: OrderCreate;
 }
@@ -64,8 +70,20 @@ export class OrdersApi extends runtime.BaseAPI {
 
     /**
      */
-    async ordersCompletedRaw(): Promise<runtime.ApiResponse<Array<Order>>> {
+    async ordersCompletedRaw(requestParameters: OrdersCompletedRequest): Promise<runtime.ApiResponse<Array<Order>>> {
         const queryParameters: any = {};
+
+        if (requestParameters.shippingStartDate !== undefined) {
+            queryParameters['shipping_start_date'] = requestParameters.shippingStartDate;
+        }
+
+        if (requestParameters.shippingEndDate !== undefined) {
+            queryParameters['shipping_end_date'] = requestParameters.shippingEndDate;
+        }
+
+        if (requestParameters.shippingPlace !== undefined) {
+            queryParameters['shipping_place'] = requestParameters.shippingPlace;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -84,8 +102,8 @@ export class OrdersApi extends runtime.BaseAPI {
 
     /**
      */
-    async ordersCompleted(): Promise<Array<Order>> {
-        const response = await this.ordersCompletedRaw();
+    async ordersCompleted(requestParameters: OrdersCompletedRequest): Promise<Array<Order>> {
+        const response = await this.ordersCompletedRaw(requestParameters);
         return await response.value();
     }
 

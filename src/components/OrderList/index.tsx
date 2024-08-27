@@ -291,6 +291,9 @@ export default function OrderList () {
           locale={{emptyText: 'No hay pedidos'}}
         />
       </div>
+      <div>
+        <p>Pedidos completados</p>
+      </div>
     </section>
   );
 }

@@ -114,7 +114,19 @@ paths:
     get:
       operationId: orders_completed
       description: ''
-      parameters: []
+      parameters:
+      - name: shipping_start_date
+        in: query
+        description: shipping_start_date
+        type: string
+      - name: shipping_end_date
+        in: query
+        description: shipping_date
+        type: string
+      - name: shipping_place
+        in: query
+        description: shipping_place
+        type: string
       responses:
         '200':
           description: ''
