@@ -1,9 +1,9 @@
 import { Table, Button, Tag, DatePicker, Select } from "antd";
 import type { TableProps } from "antd";
 import moment from "moment";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { Order, OrdersApiService, CompanyApiService } from "@/services";
+import { Order, OrdersApiService, CompanyApiService, UserCompanyRoleEnum } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
 import OrderEditModal from "@/components/OrderEditModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
@@ -19,6 +19,7 @@ interface FilterButtons {
 
 export default function OrderList () {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [currentFilter, setCurrentFilter] = useState(1);
@@ -33,7 +34,7 @@ export default function OrderList () {
   const router = useRouter();
   const ordersApi = OrdersApiService();
   const companyApi = CompanyApiService();
-  const { setCompanyStores } = useAuthContext();
+  const { setCompanyStores, userRole } = useAuthContext();
 
   useEffect(() => {
     setLoadingOrders(true);
@@ -66,6 +67,10 @@ export default function OrderList () {
     });
   }, []);
 
+  useEffect(() => {
+    setIsAdmin(userRole === UserCompanyRoleEnum.Admin);
+  }, [userRole]);
+
   const columns: TableProps<Order>["columns"] = [
     {
       title: "",
@@ -74,7 +79,7 @@ export default function OrderList () {
       width: 100,
       render: (_, record) => (
         <div className="flex gap-3 items-center">
-          <OrderEditModal record={record} isAdmin={true} />
+          <OrderEditModal record={record} isAdmin={isAdmin} orders={orders} setOrders={setOrders} />
           <OrderViewerModal record={record} />
         </div>
       ),

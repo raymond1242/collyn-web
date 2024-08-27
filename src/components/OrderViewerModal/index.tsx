@@ -26,7 +26,7 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
         footer={null}
       >
         <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
-          <div className="flex flex-col justify-center gap-4 lg:order-first order-last">
+          <div className="flex lg:flex-col flex-wrap justify-center gap-4 lg:order-first order-last">
             {record?.images?.map(image => (
               <Image
                 key={image.image!}

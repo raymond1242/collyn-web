@@ -43,7 +43,7 @@ export interface UserCompany {
      * @type {string}
      * @memberof UserCompany
      */
-    role?: UserCompanyRoleEnum;
+    role: UserCompanyRoleEnum;
 }
 
 /**
@@ -67,7 +67,7 @@ export function UserCompanyFromJSONTyped(json: any, ignoreDiscriminator: boolean
         
         'name': json['name'],
         'company': CompanyFromJSON(json['company']),
-        'role': !exists(json, 'role') ? undefined : json['role'],
+        'role': json['role'],
     };
 }
 

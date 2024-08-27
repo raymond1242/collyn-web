@@ -1,26 +1,119 @@
+import Image from "next/image";
 import { Order } from "@/services";
 import { useState, useEffect } from "react";
-import { Button, Modal, Form, Input, Select, Switch } from "antd";
 import { EditFilled } from "@ant-design/icons";
-import Image from "next/image";
+import { Button, Modal, Form, Input, Select, Switch } from "antd";
+import { OrdersApiService } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 import moment from "moment";
 import 'moment/locale/es';
 
-export default function OrderEditModal ({ record, isAdmin }: { record: Order, isAdmin: boolean }) {
+interface OrderEditModalProps {
+  record: Order;
+  isAdmin: boolean;
+  orders: Order[];
+  setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+}
+
+export default function OrderEditModal ({record, isAdmin, orders, setOrders }: OrderEditModalProps) {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [locationOptions, setLocationOptions] = useState<Array<{ value: string, label: string }>>([]);
-  const [pendingPayment, setPendingPayment] = useState(0);
-  const [advancePayment, setAdvancePayment] = useState(0);
-  const [price, setPrice] = useState(1);
+  const [pendingPayment, setPendingPayment] = useState(Number(record.pendingPayment));
+  const [advancePayment, setAdvancePayment] = useState(Number(record.advancePayment));
+  const [price, setPrice] = useState(Number(record.price));
   const [loading, setLoading] = useState(false);
 
   const { companyStores } = useAuthContext();
+  const ordersApi = OrdersApiService();
+
+  const createDateTime = (date: string, time: string): Date => {
+    const dateTime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm');
+    return dateTime.toDate();
+  }
+
+  const updateStore = (values: any) => {
+    ordersApi.ordersUpdateStore({
+      id: record.id as string,
+      data: {
+        advancePayment: String(advancePayment),
+        pendingPayment: String(pendingPayment),
+        shippingDate: createDateTime(values.deliveryDate, values.deliveryTime)
+      }
+    }).then((response) => {
+      setLoading(false);
+      setOrders(orders.map(
+        order => (
+          order.id === record.id ? {
+            ...order,
+            advancePayment: response.advancePayment,
+            pendingPayment: response.pendingPayment,
+            shippingDate: response.shippingDate
+          } : order
+        )
+      ));
+      setOpenModal(false);
+    }).catch((error) => {
+      setLoading(false);
+      setOpenModal(false);
+      console.error(error);
+    });
+  }
+
+  const updateAdmin = (values: any) => {
+    ordersApi.ordersUpdateAdmin({
+      id: record.id as string,
+      data: {
+        name: values.name,
+        product: values.product,
+        description: values.description,
+        price: String(price),
+        advancePayment: String(advancePayment),
+        pendingPayment: String(pendingPayment),
+        shippingPlace: values.shippingPlace,
+        shippingDate: createDateTime(values.deliveryDate, values.deliveryTime),
+        hasProduction: values.prod,
+        hasDelivery: values.delivery,
+      }
+    }).then((response) => {
+      setLoading(false);
+      console.log(response);
+      setOrders(orders.map(
+        order => (
+          order.id === record.id ? {
+            ...order,
+            name: response.name,
+            product: response.product,
+            description: response.description,
+            price: response.price,
+            advancePayment: response.advancePayment,
+            pendingPayment: response.pendingPayment,
+            shippingPlace: response.shippingPlace,
+            shippingDate: response.shippingDate,
+            hasProduction: response.hasProduction,
+            hasDelivery: response.hasDelivery,
+          } : order
+        )
+      ));
+      setOpenModal(false);
+    }).catch((error) => {
+      setLoading(false);
+      setOpenModal(false);
+      console.error(error);
+    });
+  }
 
   const onFinish = (values: any) => {
-    console.log(values);
+    setLoading(true);
+    if (isAdmin) {
+      updateAdmin(values);
+    } else if (!isAdmin) {
+      updateStore(values);
+    } else {
+      setLoading(false);
+      console.error("No tiene permisos para editar el pedido");
+    }
   }
 
   useEffect(() => {
@@ -60,10 +153,10 @@ export default function OrderEditModal ({ record, isAdmin }: { record: Order, is
               />
             ))}
           </div>
-          <div className="lg:py-6 py-4 lg:px-4 p-1 col-span-2 flex flex-col gap-3">
-            <p className="text-center text-lg font-light">Editar pedido</p>
+          <div className="lg:py-6 py-4 lg:px-4 p-1 col-span-2 flex flex-col justify-center gap-4">
+            <p className="text-center text-2xl font-light">Editar pedido</p>
             <Form
-              name="editOrder"
+              name={record.id}
               onFinish={onFinish}
               form={form}
               layout="vertical"
@@ -72,9 +165,6 @@ export default function OrderEditModal ({ record, isAdmin }: { record: Order, is
                   name: record.name,
                   product: record.product,
                   description: record.description,
-                  price: record.price,
-                  advancePayment: record.advancePayment,
-                  pendingPayment: record.pendingPayment,
                   registrationPlace: record.registrationPlace,
                   shippingPlace: record.shippingPlace,
                   hasProduction: record.hasProduction,
@@ -83,85 +173,82 @@ export default function OrderEditModal ({ record, isAdmin }: { record: Order, is
                 }
               }
             >
-              <div className="grid grid-cols-4 gap-4 -mb-2">
-                <Form.Item
-                  name="name"
-                  label="Nombre"
-                  className="col-span-2"
-                  rules={[{ required: true, message: "Por favor ingrese un nombre" }]}
-                >
-                  <Input
-                    disabled={!isAdmin}
-                    className="border-primary"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="hasProduction"
-                  label="Producción"
-                  valuePropName="checked"
-                  initialValue={false}
-                >
-                  <Switch disabled={!isAdmin} />
-                </Form.Item>
-                <Form.Item
-                  name="hasDelivery"
-                  label="Envio"
-                  valuePropName="checked"
-                  initialValue={false}
-                >
-                  <Switch disabled={!isAdmin} />
-                </Form.Item>
-              </div>
-              <Form.Item
-                name="product"
-                label="Producto"
-                className="mb-3"
-                rules={[{ required: true, message: "Por favor ingrese los productos" }]}
-              >
-                <Input.TextArea
-                  rows={3}
-                  disabled={!isAdmin}
-                  placeholder="Productos"
-                  className="border-primary"
-                />
-              </Form.Item>
-              <Form.Item
-                name="description"
-                label="Descripción"
-                className="mb-3"
-                rules={[{ required: true, message: "Por favor ingrese una descripción" }]}
-              >
-                <Input.TextArea
-                  rows={4}
-                  disabled={!isAdmin}
-                  placeholder="Descripción"
-                  className="border-primary"
-                />
-              </Form.Item>
-              <Form.Item
-                name="shippingPlace"
-                label="Lugar de entrega"
-                rules={[{ required: true, message: "Por favor ingrese un lugar de entrega" }]}
-              >
-                <Select
-                  size="large"
-                  className={!isAdmin ? '' : 'disabled-selector'}
-                  disabled={!isAdmin}
-                  options={locationOptions}
-                />
-              </Form.Item>
+              {isAdmin && (
+                <>
+                  <div className="grid grid-cols-4 gap-4 -mb-2">
+                    <Form.Item
+                      name="name"
+                      label="Nombre"
+                      className="col-span-2"
+                      rules={[{ required: true, message: "Por favor ingrese un nombre" }]}
+                    >
+                      <Input
+                        className="border-primary"
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name="hasProduction"
+                      label="Producción"
+                      valuePropName="checked"
+                    >
+                      <Switch />
+                    </Form.Item>
+                    <Form.Item
+                      name="hasDelivery"
+                      label="Envio"
+                      valuePropName="checked"
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </div>
+                  <Form.Item
+                    name="product"
+                    label="Producto"
+                    className="mb-3"
+                    rules={[{ required: true, message: "Por favor ingrese los productos" }]}
+                  >
+                    <Input.TextArea
+                      rows={3}
+                      placeholder="Productos"
+                      className="border-primary"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="description"
+                    label="Descripción"
+                    className="mb-3"
+                    rules={[{ required: true, message: "Por favor ingrese una descripción" }]}
+                  >
+                    <Input.TextArea
+                      rows={4}
+                      placeholder="Descripción"
+                      className="border-primary"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="shippingPlace"
+                    label="Lugar de entrega"
+                    rules={[{ required: true, message: "Por favor ingrese un lugar de entrega" }]}
+                  >
+                    <Select
+                      size="large"
+                      options={locationOptions}
+                    />
+                  </Form.Item>
+                </>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <Form.Item
                   name="deliveryDate"
                   label="Fecha entrega (mm/dd/aa)"
-                  rules={[{ required: true, message: "Por favor ingrese una fecha de entrega" }]}
+                  initialValue={moment(record.shippingDate).format('YYYY-MM-DD')}
                   >
-                  <Input type="date" className="border-primary" min={moment().format('MM/DD/YY')} /> 
+                  <Input type="date" className="border-primary" /> 
                 </Form.Item>
                 <Form.Item
                   name="deliveryTime"
                   label="Hora entrega"
-                  rules={[{ required: true, message: "Por favor ingrese una hora de entrega" }]}
+                  initialValue={moment(record.shippingDate).format('HH:mm')}
                   >
                   <Input className="border-primary" type="time" />
                 </Form.Item>
@@ -176,6 +263,7 @@ export default function OrderEditModal ({ record, isAdmin }: { record: Order, is
                   <Input
                     min={1}
                     type="number"
+                    disabled={!isAdmin}
                     className="w-full border-primary"
                     onChange={(e) => setPrice(Number(e.target.value))}
                   />

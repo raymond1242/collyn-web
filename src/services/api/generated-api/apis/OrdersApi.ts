@@ -27,6 +27,9 @@ import {
     OrderUpdateCompleted,
     OrderUpdateCompletedFromJSON,
     OrderUpdateCompletedToJSON,
+    OrderUpdateStore,
+    OrderUpdateStoreFromJSON,
+    OrderUpdateStoreToJSON,
 } from '../models';
 
 export interface OrdersCreateRequest {
@@ -39,12 +42,7 @@ export interface OrdersListRequest {
     shippingPlace?: string;
 }
 
-export interface OrdersPartialUpdateRequest {
-    id: string;
-    data: Order;
-}
-
-export interface OrdersUpdateRequest {
+export interface OrdersUpdateAdminRequest {
     id: string;
     data: OrderUpdateAdmin;
 }
@@ -52,6 +50,11 @@ export interface OrdersUpdateRequest {
 export interface OrdersUpdateCompletedRequest {
     id: string;
     data: OrderUpdateCompleted;
+}
+
+export interface OrdersUpdateStoreRequest {
+    id: string;
+    data: OrderUpdateStore;
 }
 
 /**
@@ -134,13 +137,13 @@ export class OrdersApi extends runtime.BaseAPI {
 
     /**
      */
-    async ordersPartialUpdateRaw(requestParameters: OrdersPartialUpdateRequest): Promise<runtime.ApiResponse<Order>> {
+    async ordersUpdateAdminRaw(requestParameters: OrdersUpdateAdminRequest): Promise<runtime.ApiResponse<Order>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling ordersPartialUpdate.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling ordersUpdateAdmin.');
         }
 
         if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling ordersPartialUpdate.');
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling ordersUpdateAdmin.');
         }
 
         const queryParameters: any = {};
@@ -153,45 +156,7 @@ export class OrdersApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
         }
         const response = await this.request({
-            path: `/orders/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: OrderToJSON(requestParameters.data),
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => OrderFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async ordersPartialUpdate(requestParameters: OrdersPartialUpdateRequest): Promise<Order> {
-        const response = await this.ordersPartialUpdateRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     */
-    async ordersUpdateRaw(requestParameters: OrdersUpdateRequest): Promise<runtime.ApiResponse<Order>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling ordersUpdate.');
-        }
-
-        if (requestParameters.data === null || requestParameters.data === undefined) {
-            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling ordersUpdate.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
-            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
-        }
-        const response = await this.request({
-            path: `/orders/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/orders/{id}/update_admin`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -203,8 +168,8 @@ export class OrdersApi extends runtime.BaseAPI {
 
     /**
      */
-    async ordersUpdate(requestParameters: OrdersUpdateRequest): Promise<Order> {
-        const response = await this.ordersUpdateRaw(requestParameters);
+    async ordersUpdateAdmin(requestParameters: OrdersUpdateAdminRequest): Promise<Order> {
+        const response = await this.ordersUpdateAdminRaw(requestParameters);
         return await response.value();
     }
 
@@ -243,6 +208,44 @@ export class OrdersApi extends runtime.BaseAPI {
      */
     async ordersUpdateCompleted(requestParameters: OrdersUpdateCompletedRequest): Promise<Order> {
         const response = await this.ordersUpdateCompletedRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async ordersUpdateStoreRaw(requestParameters: OrdersUpdateStoreRequest): Promise<runtime.ApiResponse<Order>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling ordersUpdateStore.');
+        }
+
+        if (requestParameters.data === null || requestParameters.data === undefined) {
+            throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling ordersUpdateStore.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/orders/{id}/update_store`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OrderUpdateStoreToJSON(requestParameters.data),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OrderFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async ordersUpdateStore(requestParameters: OrdersUpdateStoreRequest): Promise<Order> {
+        const response = await this.ordersUpdateStoreRaw(requestParameters);
         return await response.value();
     }
 

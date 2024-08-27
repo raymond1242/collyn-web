@@ -22,6 +22,8 @@ export default function Header () {
     setCompanyLogo,
     isAuthenticated,
     setIsAuthenticated,
+    userRole,
+    setUserRole,
   } = useAuthContext();
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function Header () {
       setCompanyLogo(response.company.logo as string);
       setIsAuthenticated(true);
       setImageLoading(true);
+      setUserRole(response.role);
       router.push('/order');
     }).catch((error) => {
       console.log(error);
@@ -70,7 +73,7 @@ export default function Header () {
       </div>
       <div className="flex flex-row items-center gap-4">
         {isAuthenticated ? (
-          <div className="flex flex-row items-center gap-3">
+          <div className="flex flex-row items-center gap-4">
             <div className="flex flex-col text-right">
               <p className="text-base font-medium">{userName}</p>
               <p className="text-sm font-extralight">{companyName}</p>
@@ -83,7 +86,7 @@ export default function Header () {
                   height={50}
                   onLoad={onLoadImage}
                   alt="Company logo"
-                  className={`${imageLoading ? '' : ''}`}
+                  className="h-auto w-[72px]"
                 />
               )}
             </Spin>

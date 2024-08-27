@@ -19,16 +19,8 @@
   }
 }
 
-.enabled-selector {
-  .ant-select-selector {
-    @apply border-primary !important;
-  }
-}
-
-.disabled-selector {
-  .ant-select-selector {
-    @apply border-neutral-300 !important;
-  }
+.ant-select-selector {
+  @apply border-primary !important;
 }
 
 @media (max-width: 992px) {

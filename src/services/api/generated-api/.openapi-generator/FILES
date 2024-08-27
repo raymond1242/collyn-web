@@ -10,6 +10,7 @@ models/OrderCreate.ts
 models/OrderImage.ts
 models/OrderUpdateAdmin.ts
 models/OrderUpdateCompleted.ts
+models/OrderUpdateStore.ts
 models/Token.ts
 models/User.ts
 models/UserCompany.ts

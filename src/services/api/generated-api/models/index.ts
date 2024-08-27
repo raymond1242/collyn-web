@@ -4,6 +4,7 @@ export * from './OrderCreate';
 export * from './OrderImage';
 export * from './OrderUpdateAdmin';
 export * from './OrderUpdateCompleted';
+export * from './OrderUpdateStore';
 export * from './Token';
 export * from './User';
 export * from './UserCompany';

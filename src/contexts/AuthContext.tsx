@@ -5,6 +5,7 @@ import { useEffect, useState, useContext, createContext } from "react";
 import { usePathname } from 'next/navigation';
 import { useRouter } from "next/navigation";
 import { UserCompanyStore } from "@/services";
+import { UserCompanyRoleEnum } from "@/services";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -15,6 +16,8 @@ interface AuthContextType {
   setCompanyLogo: (value: string) => void;
   companyStores: Array<UserCompanyStore>;
   setCompanyStores: (value: Array<UserCompanyStore>) => void;
+  userRole: UserCompanyRoleEnum;
+  setUserRole: (value: UserCompanyRoleEnum) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,6 +30,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [companyName, setCompanyName] = useState('');
   const [companyLogo, setCompanyLogo] = useState('');
+  const [userRole, setUserRole] = useState(UserCompanyRoleEnum.Store);
   const [companyStores, setCompanyStores] = useState<Array<UserCompanyStore>>([]);
 
   useEffect(() => {
@@ -55,6 +59,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         setCompanyLogo,
         companyStores,
         setCompanyStores,
+        userRole,
+        setUserRole,
       }}
     >
       {!isAuthPage && <Header />}
