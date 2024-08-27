@@ -38,24 +38,29 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
               />
             ))}
           </div>
-          <div className="lg:py-6 py-4 lg:px-4 p-1 col-span-2 flex flex-col gap-3">
-            <div className="flex justify-between items-center">
-              <p className="text-3xl font-bold">{record.name}</p>
-              {record.hasProduction ? (
-                <p className="text-sm bg-green-600 text-white py-1.5 px-2.5 w-fit rounded-lg">
-                  Usa producción
-                </p>
-              ) : (
-                <></>
-              )}
+          <div className="lg:py-6 py-4 lg:px-4 p-1 col-span-2 flex flex-col gap-2">
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-3xl font-semibold">{record.name}</p>
+              <div className="flex gap-2 items-center">
+                {record.hasDelivery && (
+                  <p className="text-sm bg-green-600 text-white py-1.5 px-2.5 w-fit rounded-lg">
+                    Delivery
+                  </p>
+                )}
+                {record.hasProduction && (
+                  <p className="text-sm bg-primary text-white py-1.5 px-2.5 w-fit rounded-lg">
+                    Producción
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="border border-neutral-500"></div>
+            <div className=" bg-neutral-600 text-white rounded-md py-1 px-2">Producto</div>
             <p className="whitespace-pre-wrap text-base font-light">
               {record.product}
             </p>
-            <div className="border border-neutral-500"></div>
+            <div className=" bg-neutral-600 text-white rounded-md py-1 px-2 mt-2">Descripción</div>
             <p className="text-[15px] font-light">{record.description}</p>
-            <div className="border border-neutral-500"></div>
+            <div className=" bg-neutral-600 text-white rounded-md py-1 px-2 mt-2">Detalle de producto</div>
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col">
@@ -107,6 +112,13 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
               <p className="text-xl font-medium">
                 {record.completed ? 'Entregado' : 'No entregado'}
               </p>
+            </div>
+            <div>
+              {record.updatedAt !== record.createdAt && (
+                <p className="text-base text-red-500">
+                  Fue modificado el {moment(record.updatedAt).format('DD/MM/YY HH:mm')}
+                </p>
+              )}
             </div>
           </div>
         </div>

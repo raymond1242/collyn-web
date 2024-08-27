@@ -24,6 +24,7 @@ export default function OrderList () {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [currentFilter, setCurrentFilter] = useState(1);
   const [filterLocation, setFilterLocation] = useState("");
+  const [alertTime, setAlertTime] = useState(moment().add(25, "minutes").toDate());
   const [loadingLocations, setLoadingLocations] = useState(true);
   const [locationOptions, setLocationOptions] = useState<Array<{ value: string, label: string }>>([]);
   const [filterDate, setFilterDate] = useState({
@@ -36,7 +37,7 @@ export default function OrderList () {
   const companyApi = CompanyApiService();
   const { setCompanyStores, userRole } = useAuthContext();
 
-  useEffect(() => {
+  const getOrders = () => {
     setLoadingOrders(true);
     ordersApi.ordersList(
       {
@@ -51,6 +52,10 @@ export default function OrderList () {
       console.error(error);
       setLoadingOrders(false);
     });
+  }
+
+  useEffect(() => {
+    getOrders();
   }, [filterDate, filterLocation]);
 
   useEffect(() => {
@@ -65,6 +70,14 @@ export default function OrderList () {
       setLoadingLocations(false);
       console.error(error);
     });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getOrders();
+      setAlertTime(moment().add(25, "minutes").toDate());
+    }, 12000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -140,10 +153,9 @@ export default function OrderList () {
       render: (text: string) => <p>{text}</p>,
     },
     {
-      title:"PROD",
+      title:"Prod",
       dataIndex: "hasProduction",
       key: "hasProduction",
-      sorter: (a: Order, b: Order) => Number(a.hasProduction) - Number(b.hasProduction),
       render: (text: boolean) => text ? (
         <div className="text-center">
           <Tag className="rounded-md bg-primary text-white border-primary">Si</Tag>
@@ -155,11 +167,25 @@ export default function OrderList () {
       ),
     },
     {
-      title: "Entregado",
+      title: "Con entrega",
+      dataIndex: "hasDelivery",
+      key: "hasDelivery",
+      render: (text: boolean) => text ? (
+        <div className="text-center">
+          <Tag className="rounded-md bg-green-600 text-white border-green-600">Si</Tag>
+        </div>
+      ) : (
+        <div className="text-center">
+          <Tag className="rounded-md text-neutral-400">No</Tag>
+        </div>
+      ),
+    },
+    {
+      title: "Completado",
       dataIndex: "completed",
       key: "completed",
-      defaultSortOrder: "ascend",
-      sorter: (a: Order, b: Order) => Number(a.completed) - Number(b.completed),
+      // defaultSortOrder: "ascend",
+      // sorter: (a: Order, b: Order) => Number(a.completed) - Number(b.completed),
       render: (completed: boolean, record) => (
         <div className="text-center">
           <SwitchConfirmModal checked={completed} record={record} orders={orders} setOrders={setOrders} />
@@ -255,7 +281,7 @@ export default function OrderList () {
           columns={columns}
           rowClassName={
             (record: Order) => (
-              record.completed ? '' : record.shippingDate > moment().add(25, "minutes").toDate() ? '' : 'blink'
+              record.completed ? '' : record.shippingDate > alertTime ? '' : 'blink'
             )
           }
           size="middle"

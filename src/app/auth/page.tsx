@@ -25,7 +25,6 @@ export default function Auth() {
     }
 
     authApi.authLogin(requestParamas).then((response) => {
-      console.log(response);
       AuthService.setAuthToken(response.key);
       AuthService.setUserName(response.user.username);
       setIsAuthenticated(true);

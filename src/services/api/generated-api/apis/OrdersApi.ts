@@ -64,6 +64,33 @@ export class OrdersApi extends runtime.BaseAPI {
 
     /**
      */
+    async ordersCompletedRaw(): Promise<runtime.ApiResponse<Array<Order>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/orders/completed`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OrderFromJSON));
+    }
+
+    /**
+     */
+    async ordersCompleted(): Promise<Array<Order>> {
+        const response = await this.ordersCompletedRaw();
+        return await response.value();
+    }
+
+    /**
+     */
     async ordersCreateRaw(requestParameters: OrdersCreateRequest): Promise<runtime.ApiResponse<Order>> {
         if (requestParameters.data === null || requestParameters.data === undefined) {
             throw new runtime.RequiredError('data','Required parameter requestParameters.data was null or undefined when calling ordersCreate.');
