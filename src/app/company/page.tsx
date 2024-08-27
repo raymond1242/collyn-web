@@ -26,9 +26,9 @@ export default function Company() {
       <div className="flex flex-col gap-3 border border-neutral-400 rounded-md p-4 w-fit">
         <p className="text-xl font-medium">Usuarios</p>
         <div className="flex flex-wrap gap-2 items-center">
-          {companyStores.map(store => (
-            <div className="flex flex-col gap-1 border border-neutral-400 rounded-md p-2">
-              <p key={store.name} className="text-base">{store.name}</p>
+          {companyStores.map((store) => (
+            <div key={store.name} className="flex flex-col gap-1 border border-neutral-400 rounded-md p-2">
+              <p className="text-base">{store.name}</p>
               <p className="text-sm font-light text-center">Tienda</p>
             </div>
           ))}
