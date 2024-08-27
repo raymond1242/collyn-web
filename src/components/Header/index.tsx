@@ -66,7 +66,7 @@ export default function Header () {
 
   return (
     <header className="flex flex-row justify-between items-center top-0 sticky z-20 bg-neutral-50 px-6 py-2.5">
-      <div className="flex flex-row gap-1 items-center">
+      <div className="lg:flex flex-row gap-1 items-center hidden">
         <Link href={"/"} className="flex flex-row items-center">
           <Image
             src={"/collyn-logo.svg"}
@@ -79,7 +79,7 @@ export default function Header () {
       <div className="flex flex-row items-center gap-4">
         {isAuthenticated ? (
           <div className="flex flex-row items-center gap-4">
-            <div className="flex flex-col text-right">
+            <div className="flex flex-col lg:text-right text-left">
               <p className="text-base font-medium">{userName}</p>
               <p className="text-sm font-extralight">{companyName}</p>
             </div>
