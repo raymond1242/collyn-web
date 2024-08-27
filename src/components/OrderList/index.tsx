@@ -8,6 +8,7 @@ import OrderViewerModal from "@/components/OrderViewerModal";
 import OrderEditModal from "@/components/OrderEditModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { get } from "http";
 
 const { RangePicker } = DatePicker;
 
@@ -19,6 +20,9 @@ interface FilterButtons {
 
 export default function OrderList () {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [completedOrders, setCompletedOrders] = useState<Order[]>([]);
+  const [loadingCompletedOrders, setLoadingCompletedOrders] = useState(false);
+  const [showCompletedOrders, setShowCompletedOrders] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
@@ -51,6 +55,24 @@ export default function OrderList () {
     }).catch((error) => {
       console.error(error);
       setLoadingOrders(false);
+    });
+  }
+
+  const getCompletedOrders = () => {
+    setLoadingCompletedOrders(true);
+    console.log("getCompletedOrders");
+    ordersApi.ordersCompleted(
+      {
+        shippingStartDate: filterDate.start,
+        shippingEndDate: filterDate.end,
+        shippingPlace: filterLocation
+      }
+    ).then((response) => {
+      setCompletedOrders(response);
+      setLoadingCompletedOrders(false);
+    }).catch((error) => {
+      console.error(error);
+      setLoadingCompletedOrders(false);
     });
   }
 
@@ -184,11 +206,16 @@ export default function OrderList () {
       title: "Completado",
       dataIndex: "completed",
       key: "completed",
-      // defaultSortOrder: "ascend",
-      // sorter: (a: Order, b: Order) => Number(a.completed) - Number(b.completed),
       render: (completed: boolean, record) => (
         <div className="text-center">
-          <SwitchConfirmModal checked={completed} record={record} orders={orders} setOrders={setOrders} />
+          <SwitchConfirmModal
+            checked={completed}
+            record={record}
+            orders={orders}
+            setOrders={setOrders}
+            completedOrders={completedOrders}
+            setCompletedOrders={setCompletedOrders}
+          />
         </div>
       ),
     }
@@ -281,7 +308,7 @@ export default function OrderList () {
           columns={columns}
           rowClassName={
             (record: Order) => (
-              record.completed ? '' : record.shippingDate > alertTime ? '' : 'blink'
+              record.shippingDate > alertTime ? '' : 'blink'
             )
           }
           size="middle"
@@ -292,8 +319,29 @@ export default function OrderList () {
         />
       </div>
       <div>
-        <p>Pedidos completados</p>
+        <Button
+          onClick={() => {
+            setShowCompletedOrders(true);
+            getCompletedOrders();
+          }}
+        >
+          Ver pedidos completados
+        </Button>
       </div>
+      {showCompletedOrders && (
+        <div className="flex flex-col gap-4">
+          <p className="text-xl font-light">Pedidos completados</p>
+          <Table
+            dataSource={completedOrders}
+            columns={columns}
+            size="middle"
+            loading={loadingCompletedOrders}
+            className="hover:cursor-pointer"
+            rowKey={(record) => record.id as string}
+            locale={{emptyText: 'No hay pedidos'}}
+          />
+        </div>
+      )}
     </section>
   );
 }

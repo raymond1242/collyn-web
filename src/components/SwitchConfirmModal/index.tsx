@@ -9,16 +9,18 @@ interface Props {
   record: Order;
   orders: Order[];
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  completedOrders: Order[];
+  setCompletedOrders: React.Dispatch<React.SetStateAction<Order[]>>;
 }
 
-export default function SwitchConfirmModal ({ checked, record, orders, setOrders }: Props) {
+export default function SwitchConfirmModal ({ checked, record, orders, setOrders, completedOrders, setCompletedOrders }: Props) {
   const [openModal, setOpenModal] = useState(false);
   const [status, setStatus] = useState(checked);
   const [loading, setLoading] = useState(false);
 
   const ordersApi = OrdersApiService();
 
-  const onChangeCompletedStatus = (status: boolean, currentOrder: Order) => {
+  const onChangeCompletedStatus = (status: boolean) => {
     setOpenModal(true);
     setStatus(status);
   }
@@ -34,7 +36,15 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
     ordersApi.ordersUpdateCompleted(requestParamas).then((response) => {
       setLoading(false);
       setOpenModal(false);
-      setOrders(orders.map(order => (order.id === record.id ? { ...order, completed: response.completed } : order)));
+      if (response.completed) {
+        setOrders(orders.filter(order => order.id !== record.id));
+        let newCompletedOrders = completedOrders.concat(response);
+        setCompletedOrders(newCompletedOrders.map(order => (order.id === record.id ? { ...order, completed: response.completed } : order)));
+      } else {
+        setCompletedOrders(completedOrders.filter(order => order.id !== record.id));
+        let newOrders = orders.concat(response);
+        setOrders(newOrders.map(order => (order.id === record.id ? { ...order, completed: response.completed } : order)));
+      }
     }).catch((error) => {
       setLoading(false);
       setOpenModal(false);
@@ -47,17 +57,19 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
       <Switch
         checked={checked}
         checkedChildren={<CheckOutlined />}
-        onChange={(e) => onChangeCompletedStatus(e, record)}
+        onChange={(e) => onChangeCompletedStatus(e)}
       />
       <Modal
         centered
         open={openModal}
         width={480}
         onCancel={() => setOpenModal(false)}
-        onOk={() => {
-          setOpenModal(false)
-          setOrders(orders.map(order => (order.id === record.id ? { ...order, delivered: checked } : order)));
-        }}
+        // onOk={() => {
+        //   setOpenModal(false)
+        //   setOrders(orders.map(
+        //     order => (order.id !== record.id ? { ...order, completed: checked } : order)
+        //   ));
+        // }}
         footer={null}
       >
         <div className="flex flex-col gap-2">
