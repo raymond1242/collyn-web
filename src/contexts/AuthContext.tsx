@@ -18,6 +18,8 @@ interface AuthContextType {
   setCompanyStores: (value: Array<UserCompanyStore>) => void;
   userRole: UserCompanyRoleEnum;
   setUserRole: (value: UserCompanyRoleEnum) => void;
+  userName: string;
+  setUserName: (value: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [companyName, setCompanyName] = useState('');
   const [companyLogo, setCompanyLogo] = useState('');
   const [userRole, setUserRole] = useState(UserCompanyRoleEnum.Store);
+  const [userName, setUserName] = useState('');
   const [companyStores, setCompanyStores] = useState<Array<UserCompanyStore>>([]);
 
   useEffect(() => {
@@ -61,6 +64,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         setCompanyStores,
         userRole,
         setUserRole,
+        userName,
+        setUserName,
       }}
     >
       {!isAuthPage && <Header />}

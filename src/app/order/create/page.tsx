@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import moment from "moment";
 import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { createOrder } from "@/services";
+import { createOrder, AuthService } from "@/services";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 interface ImageFile {
   id: string;
@@ -17,12 +18,19 @@ export default function CreateOrder() {
   const router = useRouter();
   const [pendingPayment, setPendingPayment] = useState(0);
   const [advancePayment, setAdvancePayment] = useState(0);
+  const [locationOptions, setLocationOptions] = useState<Array<{ value: string, label: string }>>([]);
   const [price, setPrice] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  const { companyStores, userName } = useAuthContext();
 
   useEffect(() => {
     setPendingPayment(price - advancePayment);
   }, [price, advancePayment]);
+
+  useEffect(() => {
+    setLocationOptions(companyStores.map(store => ({ value: store.name, label: store.name })));
+  }, [companyStores]);
 
   const buildShippingDate = (date: string, time: string): string => {
     const dateTime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm');
@@ -93,7 +101,8 @@ export default function CreateOrder() {
             layout="vertical"
             initialValues={
               {
-                pendingPayment: pendingPayment
+                pendingPayment: pendingPayment,
+                location: userName
               }
             }
           >
@@ -104,16 +113,7 @@ export default function CreateOrder() {
                 className="col-span-2"
                 rules={[{ required: true, message: "Por favor seleccione una tienda" }]}
               >
-                <Select
-                  size="large"
-                  options={[
-                    { value: 'Loreto', label: 'Loreto' },
-                    { value: 'Esquina', label: 'Esquina' },
-                    { value: 'Alameda', label: 'Alameda' },
-                    { value: 'Ucayali', label: 'Ucayali' },
-                    { value: 'Central', label: 'Central' },
-                  ]}
-                />
+                <Input disabled className="border-primary" />
               </Form.Item>
               <Form.Item
                 name="prod"
@@ -168,21 +168,14 @@ export default function CreateOrder() {
                 rules={[{ required: true, message: "Por favor ingrese un lugar de entrega" }]}
               >
                 <Select
-                  size="large"
-                  options={[
-                    { value: 'Loreto', label: 'Loreto' },
-                    { value: 'Esquina', label: 'Esquina' },
-                    { value: 'Alameda', label: 'Alameda' },
-                    { value: 'Ucayali', label: 'Ucayali' },
-                    { value: 'Central', label: 'Central' },
-                  ]}
+                  options={locationOptions}
                 />
               </Form.Item>
               <Form.Item
                 name="phoneNumber"
                 label="Número de teléfono"
               >
-                <Input type="number" className="w-full" />
+                <Input disabled type="number" className="w-full" />
               </Form.Item>
             </div>
             <div className="grid grid-cols-3 gap-4">
@@ -228,10 +221,10 @@ export default function CreateOrder() {
               <Form.Item
                 name="deliveryDate"
                 label="Fecha entrega (mm/dd/aa)"
-                initialValue={moment().format('MM/DD/YY')}
+                initialValue={moment().format('YYYY-MM-DD')}
                 rules={[{ required: true, message: "Por favor ingrese una fecha de entrega" }]}
               >
-                <Input type="date" className="border-primary" min={moment().format('MM/DD/YY')} /> 
+                <Input type="date" className="border-primary" /> 
               </Form.Item>
               <Form.Item
                 name="deliveryTime"

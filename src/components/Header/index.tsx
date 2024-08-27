@@ -13,7 +13,7 @@ export default function Header () {
   const [imageLoading, setImageLoading] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const companyApi = CompanyApiService();
-  const [userName, setUserName] = useState('');
+  // const [userName, setUserName] = useState('');
 
   const {
     companyName,
@@ -22,8 +22,9 @@ export default function Header () {
     setCompanyLogo,
     isAuthenticated,
     setIsAuthenticated,
-    userRole,
     setUserRole,
+    userName,
+    setUserName,
   } = useAuthContext();
 
   useEffect(() => {
