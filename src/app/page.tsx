@@ -12,26 +12,26 @@ export default function Home() {
 
   return (
     <main className="flex flex-col lg:px-12 lg:py-6 p-6 bg-white">
-      {isAuthenticated && (
-        <div className="flex flex-col gap-4">
-          <p className="text-lg font-light">
-            Bienvenido a
-            <span className="ml-1.5 text-primary text-xl font-normal">
-              Collyn
-            </span>
-          </p>
-          <Button
-            loading={loading}
-            className="w-fit"
-            onClick={() => {
-              router.push('/order');
-              setLoading(true);
-            }}
-          >
-            Ir a la página de inicio
-          </Button>
-        </div>
-      )}
+      <div className="flex flex-col gap-4">
+        <p className="text-lg font-light">
+          Bienvenido a
+          <span className="ml-1.5 text-primary text-xl font-normal">
+            Collyn
+          </span>
+        </p>
+        {isAuthenticated && (
+            <Button
+              loading={loading}
+              className="w-fit"
+              onClick={() => {
+                router.push('/order');
+                setLoading(true);
+              }}
+            >
+              Ir a la página de inicio
+            </Button>
+        )}
+      </div>
     </main>
   );
 }

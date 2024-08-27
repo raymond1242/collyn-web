@@ -270,7 +270,7 @@ export default function OrderList () {
           {isAdmin && (
             <Button
               size="large"
-              disabled
+              // disabled
               className="btn-users w-fit"
               onClick={() => {
                 router.push('/company');
