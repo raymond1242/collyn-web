@@ -7,13 +7,15 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { AuthService, CompanyApiService } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { usePathname } from "next/navigation";
 
 export default function Header () {
   const router = useRouter();
   const [imageLoading, setImageLoading] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const companyApi = CompanyApiService();
-  // const [userName, setUserName] = useState('');
+
+  const pathname = usePathname();
 
   const {
     companyName,
@@ -44,7 +46,9 @@ export default function Header () {
       setIsAuthenticated(true);
       setImageLoading(true);
       setUserRole(response.role);
-      router.push('/order');
+      if (pathname === '/auth') {
+        router.push('/order');
+      }
     }).catch((error) => {
       console.log(error);
       AuthService.removeAuthToken()

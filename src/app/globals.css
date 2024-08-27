@@ -66,9 +66,9 @@
     color: var(--primary-hover) !important;
   }
 
-  &:disabled {
+  /* &:disabled {
     @apply pointer-events-none
-  }
+  } */
 }
 
 .btn-danger {
@@ -80,6 +80,18 @@
 
   &:disabled {
     @apply pointer-events-none
+  }
+}
+
+.btn-users {
+  @apply bg-orange-500 text-white border-orange-500;
+
+  &:hover {
+    @apply bg-orange-600 text-white border-orange-600 !important;
+  }
+
+  &:disabled {
+    @apply bg-neutral-300 text-neutral-500 border-neutral-300 !important;
   }
 }
 

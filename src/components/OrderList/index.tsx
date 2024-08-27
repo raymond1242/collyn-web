@@ -8,7 +8,6 @@ import OrderViewerModal from "@/components/OrderViewerModal";
 import OrderEditModal from "@/components/OrderEditModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { get } from "http";
 
 const { RangePicker } = DatePicker;
 
@@ -98,7 +97,7 @@ export default function OrderList () {
     const interval = setInterval(() => {
       getOrders();
       setAlertTime(moment().add(25, "minutes").toDate());
-    }, 12000);
+    }, 20000);
     return () => clearInterval(interval);
   }, []);
 
@@ -255,18 +254,32 @@ export default function OrderList () {
   return (
     <section className="grid gap-4 py-2">
       <div className="flex flex-col gap-4 justify-between py-2">
-        <Button
-          type="primary"
-          size="large"
-          className="w-fit"
-          onClick={() => {
-            setLoading(true);
-            router.push('/order/create');
-          }}
-          loading={loading}
-        >
-          Crear pedido
-        </Button>
+        <div className="flex flex-wrap gap-2 mb-2">
+          <Button
+            type="primary"
+            size="large"
+            className="w-fit"
+            onClick={() => {
+              setLoading(true);
+              router.push('/order/create');
+            }}
+            loading={loading}
+          >
+            Crear pedido
+          </Button>
+          {isAdmin && (
+            <Button
+              size="large"
+              disabled
+              className="btn-users w-fit"
+              onClick={() => {
+                router.push('/company');
+              }}
+            >
+              Administrar usuarios
+            </Button>
+          )}
+        </div>
         <div className="flex justify-between lg:flex-row flex-col gap-4">
           <div className="flex gap-2 items-center">
             <p className="text-base font-light">Filtra por tienda</p>
