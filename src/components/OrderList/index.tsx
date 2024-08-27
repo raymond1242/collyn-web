@@ -97,7 +97,7 @@ export default function OrderList () {
     const interval = setInterval(() => {
       getOrders();
       setAlertTime(moment().add(25, "minutes").toDate());
-    }, 20000);
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
