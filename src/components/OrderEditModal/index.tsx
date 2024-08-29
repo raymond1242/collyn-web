@@ -140,19 +140,24 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders }: O
         onCancel={() => setOpenModal(false)}
         footer={null}
       >
-        <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
-          <div className="flex lg:flex-col flex-wrap justify-center items-center gap-4 lg:order-first order-last">
-            {record?.images?.map(image => (
-              <Image
-                key={image.image!}
-                src={image.image!}
-                alt="Order image"
-                width={340}
-                height={300}
-                className="rounded-xl bg-neutral-100 border"
-              />
-            ))}
-          </div>
+        <div className={`grid grid-cols-1 gap-2 items-center ${Number(record?.images?.length) > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
+          {Number(record?.images?.length) > 0 && (
+            <div className="flex lg:flex-col flex-wrap justify-center gap-4 lg:order-first order-last">
+              {record?.images?.map((image, index) => (
+                <div key={index}>
+                  <p className="text-base absolute font-medium bg-red-600 text-white w-fit px-2 py-1 rounded-lg">{index + 1}</p>
+                  <Image
+                    key={image.image!}
+                    src={image.image!}
+                    alt="Order image"
+                    width={350}
+                    height={300}
+                    className="rounded-xl bg-neutral-100 border"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           <div className="lg:py-6 py-4 lg:px-4 p-1 col-span-2 flex flex-col justify-center gap-4">
             <p className="text-center text-2xl font-light">Editar pedido</p>
             <Form
