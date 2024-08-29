@@ -1,7 +1,8 @@
 import { Table, Button, Tag, DatePicker, Select, Switch } from "antd";
 import type { TableProps } from "antd";
+import { ShopOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Order, OrdersApiService, CompanyApiService, UserCompanyRoleEnum } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
@@ -95,7 +96,6 @@ export default function OrderList () {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // getOrders();
       setAlertTime(moment().add(25, "minutes").toDate());
     }, 30000);
     return () => clearInterval(interval);
@@ -280,7 +280,8 @@ export default function OrderList () {
           )}
         </div>
         <div className="flex justify-between lg:flex-row flex-col gap-5">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-1.5 items-center">
+            <ShopOutlined className="text-orange-500 text-2xl" />
             <p className="font-light">Tienda</p>
             <Select
               defaultValue={filterLocation}
