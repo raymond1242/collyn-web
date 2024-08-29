@@ -257,8 +257,9 @@ export default function CreateOrder() {
                   ></input>
                 </div>
                 <div className="flex flex-wrap gap-4 mt-4">
-                  {images.map(image => (
+                  {images.map((image, index) => (
                     <div key={image.id}>
+                      <p className="text-base absolute font-medium bg-red-600 text-white w-fit px-2 py-1 rounded-lg">{index + 1}</p>
                       <img src={image.id} alt="Selected" width="140" />
                     </div>
                   ))}

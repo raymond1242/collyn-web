@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button, Spin } from "antd";
+import { LogoutOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { AuthService, CompanyApiService } from "@/services";
@@ -106,6 +107,7 @@ export default function Header () {
                   AuthService.removeCompanyName()
                   router.push('/auth');
                 }}
+                icon={<LogoutOutlined />}
               >
                 Cerrar sesión
               </Button>
