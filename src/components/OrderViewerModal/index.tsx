@@ -29,7 +29,7 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
           {Number(record?.images?.length) > 0 && (
             <div className="flex lg:flex-col flex-wrap justify-center gap-4 lg:order-first order-last">
               {record?.images?.map((image, index) => (
-                <div>
+                <div key={index}>
                   <p className="text-base absolute font-medium bg-red-600 text-white w-fit px-2 py-1 rounded-lg">{index + 1}</p>
                   <Image
                     key={image.image!}
