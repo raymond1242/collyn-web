@@ -9,9 +9,12 @@
   --secondary: #DFDFDF;
 }
 
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: none !important;
+}
+
 .blink {
   animation: blink-animation 2.5s infinite;
-  pointer-events: none;
 }
 
 @keyframes blink-animation {
@@ -69,10 +72,10 @@
 }
 
 .btn-danger {
-  @apply bg-red-500 text-white border-red-500;
+  @apply bg-red-600 text-white border-red-600;
 
   &:hover {
-    @apply text-red-500 bg-white border-red-500 !important;
+    @apply text-red-600 bg-white border-red-600 !important;
   }
 
   &:disabled {
@@ -81,10 +84,10 @@
 }
 
 .btn-users {
-  @apply bg-orange-500 text-white border-orange-500;
+  @apply bg-orange-600 text-white border-orange-600;
 
   &:hover {
-    @apply bg-orange-600 text-white border-orange-600 !important;
+    @apply bg-orange-500 text-white border-orange-500 !important;
   }
 
   &:disabled {

@@ -281,7 +281,7 @@ export default function OrderList () {
         </div>
         <div className="flex justify-between lg:flex-row flex-col gap-5">
           <div className="flex gap-1.5 items-center">
-            <ShopOutlined className="text-orange-500 text-2xl" />
+            <ShopOutlined className="text-red-600 text-2xl" />
             <p className="font-light">Tienda</p>
             <Select
               defaultValue={filterLocation}
@@ -336,7 +336,6 @@ export default function OrderList () {
           }
           size="middle"
           loading={loadingOrders}
-          className="hover:cursor-pointer"
           rowKey={(record) => record.id as string}
           locale={{emptyText: 'No hay pedidos'}}
         />
