@@ -1,7 +1,8 @@
-import { Table, Button, Tag, DatePicker, Select } from "antd";
+import { Table, Button, Tag, DatePicker, Select, Switch } from "antd";
 import type { TableProps } from "antd";
+import { ShopOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Order, OrdersApiService, CompanyApiService, UserCompanyRoleEnum } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
@@ -95,7 +96,6 @@ export default function OrderList () {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      getOrders();
       setAlertTime(moment().add(25, "minutes").toDate());
     }, 30000);
     return () => clearInterval(interval);
@@ -270,7 +270,6 @@ export default function OrderList () {
           {isAdmin && (
             <Button
               size="large"
-              // disabled
               className="btn-users w-fit"
               onClick={() => {
                 router.push('/company');
@@ -280,9 +279,10 @@ export default function OrderList () {
             </Button>
           )}
         </div>
-        <div className="flex justify-between lg:flex-row flex-col gap-4">
-          <div className="flex gap-2 items-center">
-            <p className="text-base font-light">Filtra por tienda</p>
+        <div className="flex justify-between lg:flex-row flex-col gap-5">
+          <div className="flex gap-1.5 items-center">
+            <ShopOutlined className="text-orange-500 text-2xl" />
+            <p className="font-light">Tienda</p>
             <Select
               defaultValue={filterLocation}
               loading={loadingLocations}
@@ -291,7 +291,17 @@ export default function OrderList () {
               options={locationOptions}
             />
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-row gap-6 items-center">
+            <div className="flex flex-col gap-1 lg:w-full w-fit">
+              <p className="font-light">Producción</p>
+              <Switch />
+            </div>
+            <div className="flex flex-col gap-1 lg:w-full w-fit">
+              <p className="font-light">Toppers</p>
+              <Switch />
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-3 items-center">
             {dateFilter.map((date: FilterButtons, key: number) => (
               <Button
                 key={key}
