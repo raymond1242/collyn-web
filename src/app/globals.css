@@ -11,6 +11,7 @@
 
 .blink {
   animation: blink-animation 2.5s infinite;
+  pointer-events: none;
 }
 
 @keyframes blink-animation {
@@ -65,10 +66,6 @@
     border-color: var(--primary-hover) !important;
     color: var(--primary-hover) !important;
   }
-
-  /* &:disabled {
-    @apply pointer-events-none
-  } */
 }
 
 .btn-danger {

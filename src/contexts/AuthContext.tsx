@@ -4,8 +4,7 @@ import Header from "@/components/Header";
 import { useEffect, useState, useContext, createContext } from "react";
 import { usePathname } from 'next/navigation';
 import { useRouter } from "next/navigation";
-import { UserCompanyStore } from "@/services";
-import { UserCompanyRoleEnum } from "@/services";
+import { UserCompanyStore, UserCompanyRoleEnum, AuthService } from "@/services";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -37,7 +36,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [companyStores, setCompanyStores] = useState<Array<UserCompanyStore>>([]);
 
   useEffect(() => {
-    if (!isAuthenticated && pathname.includes("/order")) {
+    console.log({ isAuthenticated, pathname });
+    if (!AuthService.getAuthToken() && pathname.includes("/order")) {
       setCompanyName('');
       setCompanyLogo('');
       // tODO: veriffy if exists a token and verify it
