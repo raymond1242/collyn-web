@@ -92,7 +92,7 @@ export default function CreateOrder() {
         <ArrowLeftOutlined />
         Atrás
       </p>
-      <div className="flex flex-col mx-auto gap-5 lg:w-[500px] w-full p-4">
+      <div className="flex flex-col mx-auto gap-5 lg:w-[500px] w-full py-4 px-1">
         <p className="text-[44px] font-semibold">Crear pedido</p>
         <Form
             name="order"
@@ -102,7 +102,6 @@ export default function CreateOrder() {
             initialValues={
               {
                 pendingPayment: pendingPayment,
-                location: userName
               }
             }
           >
@@ -113,7 +112,11 @@ export default function CreateOrder() {
                 className="col-span-2"
                 rules={[{ required: true, message: "Por favor seleccione una tienda" }]}
               >
-                <Input disabled className="border-primary" />
+                <p
+                  className="border border-neutral-300 py-2 px-3 bg-neutral-100 rounded-md"
+                >
+                  {userName}
+                </p>
               </Form.Item>
               <Form.Item
                 name="prod"
@@ -211,7 +214,7 @@ export default function CreateOrder() {
                 label="Pendiente"
               >
                 <p
-                  className="border border-neutral-300 py-2 px-3 bg-neutral-100 rounded-md w-40"
+                  className="border border-neutral-300 py-2 px-3 bg-neutral-100 rounded-md"
                 >
                   {pendingPayment}
                 </p>

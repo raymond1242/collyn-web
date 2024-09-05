@@ -69,6 +69,10 @@
     border-color: var(--primary-hover) !important;
     color: var(--primary-hover) !important;
   }
+
+  &:disabled {
+    @apply pointer-events-none
+  }
 }
 
 .btn-danger {

@@ -14,9 +14,10 @@ interface OrderEditModalProps {
   isAdmin: boolean;
   orders: Order[];
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  disabled: boolean;
 }
 
-export default function OrderEditModal ({record, isAdmin, orders, setOrders }: OrderEditModalProps) {
+export default function OrderEditModal ({record, isAdmin, orders, setOrders, disabled }: OrderEditModalProps) {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
   const [locationOptions, setLocationOptions] = useState<Array<{ value: string, label: string }>>([]);
@@ -128,6 +129,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders }: O
     <>
       <Button
         className="rounded-full"
+        disabled={disabled}
         icon={<EditFilled />}
         onClick={() => {
           setOpenModal(true);

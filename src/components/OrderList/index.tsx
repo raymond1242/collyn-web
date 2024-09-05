@@ -39,7 +39,7 @@ export default function OrderList () {
   const router = useRouter();
   const ordersApi = OrdersApiService();
   const companyApi = CompanyApiService();
-  const { setCompanyStores, userRole } = useAuthContext();
+  const { setCompanyStores, userRole, userName } = useAuthContext();
 
   const getOrders = () => {
     setLoadingOrders(true);
@@ -105,6 +105,16 @@ export default function OrderList () {
     setIsAdmin(userRole === UserCompanyRoleEnum.Admin);
   }, [userRole]);
 
+  const disableEdit = (record: Order) => {
+    if (isAdmin){
+      return false;
+    }
+    if (record.registrationPlace === userName || record.shippingPlace === userName) {
+      return false;
+    }
+    return true;
+  }
+
   const columns: TableProps<Order>["columns"] = [
     {
       title: "",
@@ -113,7 +123,7 @@ export default function OrderList () {
       width: 100,
       render: (_, record) => (
         <div className="flex gap-3 items-center">
-          <OrderEditModal record={record} isAdmin={isAdmin} orders={orders} setOrders={setOrders} />
+          <OrderEditModal record={record} isAdmin={isAdmin} orders={orders} setOrders={setOrders} disabled={disableEdit(record)} />
           <OrderViewerModal record={record} />
         </div>
       ),

@@ -36,7 +36,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [companyStores, setCompanyStores] = useState<Array<UserCompanyStore>>([]);
 
   useEffect(() => {
-    console.log({ isAuthenticated, pathname });
     if (!AuthService.getAuthToken() && pathname.includes("/order")) {
       setCompanyName('');
       setCompanyLogo('');
