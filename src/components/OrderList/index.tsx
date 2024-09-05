@@ -4,7 +4,7 @@ import { ShopOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Order, OrdersApiService, CompanyApiService, UserCompanyRoleEnum } from "@/services";
+import { Order, OrdersApiService, UserCompanyRoleEnum } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
 import OrderEditModal from "@/components/OrderEditModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
@@ -38,8 +38,8 @@ export default function OrderList () {
 
   const router = useRouter();
   const ordersApi = OrdersApiService();
-  const companyApi = CompanyApiService();
-  const { setCompanyStores, userRole, userName } = useAuthContext();
+  // const companyApi = CompanyApiService();
+  const { companyStores, userRole, userName } = useAuthContext();
 
   const getOrders = () => {
     setLoadingOrders(true);
@@ -81,18 +81,11 @@ export default function OrderList () {
   }, [filterDate, filterLocation]);
 
   useEffect(() => {
-    companyApi.companyStores().then((response) => {
-      setCompanyStores(response);
-      let options = response.map(store => ({ value: store.name, label: store.name }))
-      options = [...options, { value: "", label: "Todos" }];
-      setLocationOptions(options);
-      setLoadingLocations(false);
-    }).catch((error) => {
-      setLocationOptions([...locationOptions, { value: "", label: "Todos" }]);
-      setLoadingLocations(false);
-      console.error(error);
-    });
-  }, []);
+    let options = companyStores.map(store => ({ value: store.name, label: store.name }))
+    options = [...options, { value: "", label: "Todos" }];
+    setLocationOptions(options);
+    setLoadingLocations(false);
+  }, [companyStores]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -113,7 +106,7 @@ export default function OrderList () {
       return false;
     }
     return true;
-  }
+  };
 
   const columns: TableProps<Order>["columns"] = [
     {
@@ -123,7 +116,13 @@ export default function OrderList () {
       width: 100,
       render: (_, record) => (
         <div className="flex gap-3 items-center">
-          <OrderEditModal record={record} isAdmin={isAdmin} orders={orders} setOrders={setOrders} disabled={disableEdit(record)} />
+          <OrderEditModal
+            record={record}
+            isAdmin={isAdmin}
+            orders={orders}
+            setOrders={setOrders}
+            disabled={disableEdit(record)}
+          />
           <OrderViewerModal record={record} />
         </div>
       ),
@@ -219,6 +218,7 @@ export default function OrderList () {
         <div className="text-center">
           <SwitchConfirmModal
             checked={completed}
+            disabled={disableEdit(record)}
             record={record}
             orders={orders}
             setOrders={setOrders}
@@ -353,11 +353,13 @@ export default function OrderList () {
       <div>
         <Button
           onClick={() => {
-            setShowCompletedOrders(true);
+            setShowCompletedOrders(!showCompletedOrders);
             getCompletedOrders();
           }}
         >
-          Ver pedidos completados
+          {
+            showCompletedOrders ? 'Ocultar pedidos completados' : 'Ver pedidos completados'
+          }
         </Button>
       </div>
       {showCompletedOrders && (

@@ -28,6 +28,7 @@ export default function Header () {
     setUserRole,
     userName,
     setUserName,
+    setCompanyStores,
   } = useAuthContext();
 
   useEffect(() => {
@@ -58,6 +59,12 @@ export default function Header () {
       setCompanyLogo('');
       AuthService.removeUserName()
       router.push('/auth');
+    });
+
+    companyApi.companyStores().then((response) => {
+      setCompanyStores(response);
+    }).catch((error) => {
+      console.error(error);
     });
   }
 

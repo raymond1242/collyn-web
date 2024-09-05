@@ -11,9 +11,18 @@ interface Props {
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
   completedOrders: Order[];
   setCompletedOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  disabled: boolean;
 }
 
-export default function SwitchConfirmModal ({ checked, record, orders, setOrders, completedOrders, setCompletedOrders }: Props) {
+export default function SwitchConfirmModal ({
+  checked,
+  record,
+  orders,
+  setOrders,
+  completedOrders,
+  setCompletedOrders,
+  disabled,
+}: Props) {
   const [openModal, setOpenModal] = useState(false);
   const [status, setStatus] = useState(checked);
   const [loading, setLoading] = useState(false);
@@ -56,6 +65,7 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
     <>
       <Switch
         checked={checked}
+        disabled={disabled}
         checkedChildren={<CheckOutlined />}
         onChange={(e) => onChangeCompletedStatus(e)}
       />
@@ -64,12 +74,6 @@ export default function SwitchConfirmModal ({ checked, record, orders, setOrders
         open={openModal}
         width={480}
         onCancel={() => setOpenModal(false)}
-        // onOk={() => {
-        //   setOpenModal(false)
-        //   setOrders(orders.map(
-        //     order => (order.id !== record.id ? { ...order, completed: checked } : order)
-        //   ));
-        // }}
         footer={null}
       >
         <div className="flex flex-col gap-2">

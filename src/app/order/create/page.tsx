@@ -4,8 +4,9 @@ import { Form, Input, Button, Switch, Select } from "antd";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
+import { InvalidShippingDateNotification } from "@/components/Notification";
 import { useRouter } from "next/navigation";
-import { createOrder, AuthService } from "@/services";
+import { createOrder } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 interface ImageFile {
@@ -34,8 +35,10 @@ export default function CreateOrder() {
 
   const buildShippingDate = (date: string, time: string): string => {
     const dateTime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm');
+    if (dateTime < moment()) {
+      return '';
+    }
     return dateTime.format('YYYY-MM-DDThh:mm');
-
   }
 
   const [images, setImages] = useState<ImageFile[]>([]);
@@ -54,6 +57,12 @@ export default function CreateOrder() {
   const onFinish = (values: any) => {
     setLoading(true);
     const shippingDate = buildShippingDate(values.deliveryDate, values.deliveryTime);
+  
+    if (shippingDate === '') {
+      setLoading(false);
+      InvalidShippingDateNotification();
+      return;
+    }
 
     const formData = new FormData();
     formData.append('name', values.name);
@@ -62,7 +71,7 @@ export default function CreateOrder() {
     formData.append('price', values.price);
     formData.append('advance_payment', String(advancePayment));
     formData.append('pending_payment', String(pendingPayment));
-    formData.append('registration_place', values.location);
+    formData.append('registration_place', userName);
     formData.append('shipping_place', values.shippingPlace);
     formData.append('shipping_date', shippingDate);
     formData.append('has_production', values.prod ? 'true' : 'false');
@@ -110,7 +119,6 @@ export default function CreateOrder() {
                 name="location"
                 label="Tienda Origen"
                 className="col-span-2"
-                rules={[{ required: true, message: "Por favor seleccione una tienda" }]}
               >
                 <p
                   className="border border-neutral-300 py-2 px-3 bg-neutral-100 rounded-md"
