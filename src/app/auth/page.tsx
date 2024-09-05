@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthApiService, AuthService } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { handleInvalidDataError } from "@/app/utils";
 
 export default function Auth() {
   const [form] = Form.useForm();
@@ -30,7 +31,7 @@ export default function Auth() {
       setIsAuthenticated(true);
       router.push('/order');
     }).catch((error) => {
-      console.error(error);
+      handleInvalidDataError(error);
       setLoading(false);
     });;
   };
