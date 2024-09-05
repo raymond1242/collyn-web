@@ -46,6 +46,8 @@ export interface OrdersListRequest {
     shippingStartDate?: string;
     shippingEndDate?: string;
     shippingPlace?: string;
+    hasProduction?: boolean;
+    hasTopper?: boolean;
 }
 
 export interface OrdersUpdateAdminRequest {
@@ -156,6 +158,14 @@ export class OrdersApi extends runtime.BaseAPI {
 
         if (requestParameters.shippingPlace !== undefined) {
             queryParameters['shipping_place'] = requestParameters.shippingPlace;
+        }
+
+        if (requestParameters.hasProduction !== undefined) {
+            queryParameters['has_production'] = requestParameters.hasProduction;
+        }
+
+        if (requestParameters.hasTopper !== undefined) {
+            queryParameters['has_topper'] = requestParameters.hasTopper;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

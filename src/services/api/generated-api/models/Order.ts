@@ -121,6 +121,12 @@ export interface Order {
      * @type {boolean}
      * @memberof Order
      */
+    hasTopper?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Order
+     */
     hasDelivery?: boolean;
     /**
      * 
@@ -161,6 +167,7 @@ export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Ord
         'shippingPlace': json['shipping_place'],
         'shippingDate': (new Date(json['shipping_date'])),
         'hasProduction': !exists(json, 'has_production') ? undefined : json['has_production'],
+        'hasTopper': !exists(json, 'has_topper') ? undefined : json['has_topper'],
         'hasDelivery': !exists(json, 'has_delivery') ? undefined : json['has_delivery'],
         'completed': !exists(json, 'completed') ? undefined : json['completed'],
         'company': json['company'],
@@ -187,6 +194,7 @@ export function OrderToJSON(value?: Order | null): any {
         'shipping_place': value.shippingPlace,
         'shipping_date': (value.shippingDate.toISOString()),
         'has_production': value.hasProduction,
+        'has_topper': value.hasTopper,
         'has_delivery': value.hasDelivery,
         'completed': value.completed,
         'company': value.company,

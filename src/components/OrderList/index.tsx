@@ -36,18 +36,23 @@ export default function OrderList () {
     end: moment().add(1, 'day').format('YYYY-MM-DD')
   });
 
+  const [productionFilter, setProductionFilter] = useState(false);
+  const [topperFilter, setTopperFilter] = useState(false);
+
   const router = useRouter();
   const ordersApi = OrdersApiService();
-  // const companyApi = CompanyApiService();
   const { companyStores, userRole, userName } = useAuthContext();
 
   const getOrders = () => {
+    console.log({ productionFilter, topperFilter });
     setLoadingOrders(true);
     ordersApi.ordersList(
       {
         shippingStartDate: filterDate.start,
         shippingEndDate: filterDate.end,
-        shippingPlace: filterLocation
+        shippingPlace: filterLocation,
+        hasProduction: productionFilter,
+        hasTopper: topperFilter
       }
     ).then((response) => {
       setOrders(response);
@@ -60,7 +65,6 @@ export default function OrderList () {
 
   const getCompletedOrders = () => {
     setLoadingCompletedOrders(true);
-    console.log("getCompletedOrders");
     ordersApi.ordersCompleted(
       {
         shippingStartDate: filterDate.start,
@@ -78,7 +82,7 @@ export default function OrderList () {
 
   useEffect(() => {
     getOrders();
-  }, [filterDate, filterLocation]);
+  }, [filterDate, filterLocation, productionFilter, topperFilter]);
 
   useEffect(() => {
     let options = companyStores.map(store => ({ value: store.name, label: store.name }))
@@ -197,7 +201,21 @@ export default function OrderList () {
       ),
     },
     {
-      title: "Con entrega",
+      title: "Topper",
+      dataIndex: "hasTopper",
+      key: "hasTopper",
+      render: (text: boolean) => text ? (
+        <div className="text-center">
+          <Tag className="rounded-md bg-primary text-white border-primary">Si</Tag>
+        </div>
+      ) : (
+        <div className="text-center">
+          <Tag className="rounded-md text-neutral-400">No</Tag>
+        </div>
+      ),
+    },
+    {
+      title: "Delivery",
       dataIndex: "hasDelivery",
       key: "hasDelivery",
       render: (text: boolean) => text ? (
@@ -304,11 +322,11 @@ export default function OrderList () {
           <div className="flex flex-row gap-6 items-center">
             <div className="flex flex-col gap-1 lg:w-full w-fit">
               <p className="font-light">Producción</p>
-              <Switch />
+              <Switch checked={productionFilter} onChange={setProductionFilter} />
             </div>
             <div className="flex flex-col gap-1 lg:w-full w-fit">
               <p className="font-light">Toppers</p>
-              <Switch />
+              <Switch checked={topperFilter} onChange={setTopperFilter} />
             </div>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
