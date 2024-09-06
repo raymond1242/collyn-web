@@ -8,6 +8,7 @@ import { Order, OrdersApiService, UserCompanyRoleEnum } from "@/services";
 import OrderViewerModal from "@/components/OrderViewerModal";
 import OrderEditModal from "@/components/OrderEditModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
+import PrintInvoiceModal from "@/components/PrintInvoiceModal";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 const { RangePicker } = DatePicker;
@@ -44,7 +45,6 @@ export default function OrderList () {
   const { companyStores, userRole, userName } = useAuthContext();
 
   const getOrders = () => {
-    console.log({ productionFilter, topperFilter });
     setLoadingOrders(true);
     ordersApi.ordersList(
       {
@@ -128,6 +128,7 @@ export default function OrderList () {
             disabled={disableEdit(record)}
           />
           <OrderViewerModal record={record} />
+          <PrintInvoiceModal record={record} />
         </div>
       ),
     },
@@ -310,7 +311,7 @@ export default function OrderList () {
         <div className="flex justify-between lg:flex-row flex-col gap-5">
           <div className="flex gap-1.5 items-center">
             <ShopOutlined className="text-red-600 text-2xl" />
-            <p className="font-light">Tienda</p>
+            <p className="font-light">Lugar de entrega</p>
             <Select
               defaultValue={filterLocation}
               loading={loadingLocations}
