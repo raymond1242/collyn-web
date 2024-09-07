@@ -17,12 +17,12 @@ export default function PrintInvoiceModal ({ record }: { record: any }) {
       ></Button>
       <Modal
         centered
-        width={420}
+        width={400}
         open={openModal}
         onCancel={() => setOpenModal(false)}
         footer={null}
       >
-        <PrintInvoiceButton record={record} />
+        <PrintInvoiceButton record={record} hide={false} />
       </Modal>
     </>
   )

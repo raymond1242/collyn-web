@@ -135,3 +135,9 @@
 .text-subtitle { 
   @apply text-3xl font-medium text-neutral-700
 }
+
+@media screen {
+	.print {
+    display: none;
+	}
+}

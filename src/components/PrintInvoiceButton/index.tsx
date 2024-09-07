@@ -5,15 +5,15 @@ import { Order } from '@/services';
 import { Button } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
 
-export default function PrintInvoiceButton ({ record }: { record: Order }) {
+export default function PrintInvoiceButton ({ record, hide }: { record: Order, hide: boolean }) {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
   
   return (
-    <div className='flex flex-col items-center'>
-      <div className='py-4 text-left w-full'>
+    <div className='flex flex-col mx-auto items-center w-fit'>
+      <div className='pb-6 pt-4 text-left w-full'>
         <Button
           onClick={handlePrint}
           type='primary'
@@ -22,7 +22,7 @@ export default function PrintInvoiceButton ({ record }: { record: Order }) {
           Imprimir
         </Button>
       </div>
-      <InvoiceComponent ref={componentRef} order={record} />
+      <InvoiceComponent ref={componentRef} hide={hide} order={record} />
     </div>
   );
 };

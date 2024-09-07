@@ -6,14 +6,15 @@ import { useAuthContext } from "@/contexts/AuthContext";
 
 interface InvoiceComponentProps {
   order: Order
+  hide: boolean
 }
 
 const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponentProps>((props, ref) => {
-  const { order } = props;
+  const { order, hide } = props;
   const { companyLogo } = useAuthContext()
 
   return (
-    <div className="py-6 px-6 w-72" ref={ref}>
+    <div className={`w-60 ${hide ? 'print' : ''}`} ref={ref}>
       <div className="flex pb-6 justify-center">
         <Image
           src={companyLogo}
