@@ -84,14 +84,6 @@ export default function Header () {
           />
         </Link>
       </div>
-      <div className="flex flex-row gap-4 lg:w-48 lg:justify-between items-center text-lg font-light">
-        <Link href={"/"}>
-          Inicio
-        </Link>
-        <Link href={"/pricing"}>
-          Planes
-        </Link>
-      </div>
       <div className="flex flex-row items-center gap-4">
         {isAuthenticated ? (
           <div className="flex flex-row items-center gap-4">
