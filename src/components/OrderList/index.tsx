@@ -300,6 +300,7 @@ export default function OrderList () {
             <Button
               size="large"
               className="btn-users w-fit"
+              disabled
               onClick={() => {
                 router.push('/company');
               }}

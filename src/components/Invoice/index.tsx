@@ -8,7 +8,7 @@ interface InvoiceComponentProps {
   order: Order
 }
 
-export const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponentProps>((props, ref) => {
+const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponentProps>((props, ref) => {
   const { order } = props;
   const { companyLogo } = useAuthContext()
 
@@ -63,3 +63,7 @@ export const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceC
     </div>
   );
 });
+
+InvoiceComponent.displayName = 'InvoiceComponent';
+
+export default InvoiceComponent;

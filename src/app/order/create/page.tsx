@@ -8,6 +8,7 @@ import { InvalidShippingDateNotification } from "@/components/Notification";
 import { useRouter } from "next/navigation";
 import { createOrder } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
+import Image from "next/image";
 
 interface ImageFile {
   id: string;
@@ -35,10 +36,10 @@ export default function CreateOrder() {
 
   const buildShippingDate = (date: string, time: string): string => {
     const dateTime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm');
-    if (dateTime < moment()) {
+    if (dateTime < moment().add(-5, 'minutes')) {
       return '';
     }
-    return dateTime.format('YYYY-MM-DDThh:mm');
+    return dateTime.format('YYYY-MM-DDTHH:mm');
   }
 
   const [images, setImages] = useState<ImageFile[]>([]);
@@ -76,6 +77,7 @@ export default function CreateOrder() {
     formData.append('shipping_date', shippingDate);
     formData.append('has_production', values.prod ? 'true' : 'false');
     formData.append('has_delivery', values.delivery ? 'true' : 'false');
+    formData.append('has_topper', values.topper ? 'true' : 'false');
 
     for (let i = 0; i < images.length; i++) {
       formData.append('images', images[i].file);
@@ -114,7 +116,7 @@ export default function CreateOrder() {
               }
             }
           >
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-5 gap-4">
               <Form.Item
                 name="location"
                 label="Tienda Origen"
@@ -136,7 +138,15 @@ export default function CreateOrder() {
               </Form.Item>
               <Form.Item
                 name="delivery"
-                label="Con entrega"
+                label="Delivery"
+                valuePropName="checked"
+                initialValue={false}
+              >
+                <Switch />
+              </Form.Item>
+              <Form.Item
+                name="topper"
+                label="Topper"
                 valuePropName="checked"
                 initialValue={false}
               >
@@ -271,7 +281,7 @@ export default function CreateOrder() {
                   {images.map((image, index) => (
                     <div key={image.id}>
                       <p className="text-base absolute font-medium bg-red-600 text-white w-fit px-2 py-1 rounded-lg">{index + 1}</p>
-                      <img src={image.id} alt="Selected" width="140" />
+                      <Image src={image.id} alt="Selected" width="140" />
                     </div>
                   ))}
                 </div>

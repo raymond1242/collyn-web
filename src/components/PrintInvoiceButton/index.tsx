@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { InvoiceComponent } from "@/components/Invoice";
+import InvoiceComponent from "@/components/Invoice";
 import { Order } from '@/services';
 import { Button } from 'antd';
 import { PrinterOutlined } from '@ant-design/icons';
