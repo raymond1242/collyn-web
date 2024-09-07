@@ -93,6 +93,12 @@ export interface OrderCreate {
     hasDelivery?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof OrderCreate
+     */
+    hasTopper?: boolean;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof OrderCreate
      */
@@ -121,6 +127,7 @@ export function OrderCreateFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'shippingDate': (new Date(json['shipping_date'])),
         'hasProduction': !exists(json, 'has_production') ? undefined : json['has_production'],
         'hasDelivery': !exists(json, 'has_delivery') ? undefined : json['has_delivery'],
+        'hasTopper': !exists(json, 'has_topper') ? undefined : json['has_topper'],
         'images': !exists(json, 'images') ? undefined : json['images'],
     };
 }
@@ -146,6 +153,7 @@ export function OrderCreateToJSON(value?: OrderCreate | null): any {
         'shipping_date': (value.shippingDate.toISOString()),
         'has_production': value.hasProduction,
         'has_delivery': value.hasDelivery,
+        'has_topper': value.hasTopper,
         'images': value.images,
     };
 }

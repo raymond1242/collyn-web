@@ -12,8 +12,8 @@ export default function PrintInvoiceButton ({ record, hide }: { record: Order, h
   });
   
   return (
-    <div className='flex flex-col mx-auto items-center w-fit'>
-      <div className='pb-6 pt-4 text-left w-full'>
+    <div className='flex flex-col gap-4 mx-auto items-center w-fit'>
+      <div className='text-left w-full'>
         <Button
           onClick={handlePrint}
           type='primary'

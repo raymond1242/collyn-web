@@ -1,4 +1,4 @@
-import { Configuration, Order } from "./generated-api";
+import { Configuration, Order, OrderFromJSON } from "./generated-api";
 import { AuthApi, OrdersApi, CompanyApi } from "./generated-api/apis";
 import { AuthService } from "@/services/auth.service";
 
@@ -37,5 +37,5 @@ export const createOrder = async (formData: FormData): Promise<Order> => {
     headers: AuthService.getDefaultHeaders(),
   });
 
-  return await response.json();
+  return OrderFromJSON(await response.json());
 }

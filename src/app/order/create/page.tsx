@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { createOrder } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
 import Image from "next/image";
+import OrderCreatedModal from "@/components/OrderCreatedModal";
+import { Order } from "@/services";
 
 interface ImageFile {
   id: string;
@@ -18,6 +20,27 @@ interface ImageFile {
 export default function CreateOrder() {
   const [form] = Form.useForm();
   const router = useRouter();
+  const [openModal, setOpenModal] = useState(false);
+  const [order, setOrder] = useState<Order>({
+    name: '',
+    product: '',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    discount: '',
+    description: '',
+    price: "100",
+    advancePayment: "100",
+    pendingPayment: "0",
+    registrationPlace: '',
+    shippingPlace: '',
+    shippingDate: new Date(),
+    hasProduction: false,
+    hasTopper: false,
+    hasDelivery: false,
+    images: [],
+    completed: false,
+    company: 1,
+  });
   const [pendingPayment, setPendingPayment] = useState(0);
   const [advancePayment, setAdvancePayment] = useState(0);
   const [locationOptions, setLocationOptions] = useState<Array<{ value: string, label: string }>>([]);
@@ -85,7 +108,8 @@ export default function CreateOrder() {
 
     createOrder(formData).then((response) => {
       setLoading(false);
-      router.push('/order');
+      setOrder(response);
+      setOpenModal(true);
     }).catch((error) => {
       setLoading(false);
       console.error(error);
@@ -104,6 +128,7 @@ export default function CreateOrder() {
         Atrás
       </p>
       <div className="flex flex-col mx-auto gap-5 lg:w-[500px] w-full py-4 px-1">
+        <OrderCreatedModal open={openModal} order={order} />
         <p className="text-[44px] font-semibold">Crear pedido</p>
         <Form
             name="order"
@@ -281,7 +306,7 @@ export default function CreateOrder() {
                   {images.map((image, index) => (
                     <div key={image.id}>
                       <p className="text-base absolute font-medium bg-red-600 text-white w-fit px-2 py-1 rounded-lg">{index + 1}</p>
-                      <Image src={image.id} alt="Selected" width="140" />
+                      <Image src={image.id} alt="Selected" width={140} height={100} />
                     </div>
                   ))}
                 </div>
