@@ -25,6 +25,12 @@ export interface UserCompanyStore {
      * @memberof UserCompanyStore
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserCompanyStore
+     */
+    address?: string | null;
 }
 
 export function UserCompanyStoreFromJSON(json: any): UserCompanyStore {
@@ -38,6 +44,7 @@ export function UserCompanyStoreFromJSONTyped(json: any, ignoreDiscriminator: bo
     return {
         
         'name': json['name'],
+        'address': !exists(json, 'address') ? undefined : json['address'],
     };
 }
 
@@ -51,6 +58,7 @@ export function UserCompanyStoreToJSON(value?: UserCompanyStore | null): any {
     return {
         
         'name': value.name,
+        'address': value.address,
     };
 }
 

@@ -11,7 +11,12 @@ interface InvoiceComponentProps {
 
 const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponentProps>((props, ref) => {
   const { order, hide } = props;
-  const { companyLogo } = useAuthContext()
+  const { companyLogo, companyStores } = useAuthContext()
+
+  const getStoreAddress = (storeName: string): string => {
+    const storeAddress = companyStores.find(store => store.name === storeName);
+    return storeAddress?.address ?? storeName;
+  }
 
   return (
     <div className={`w-60 ${hide ? 'print' : ''}`} ref={ref}>
@@ -39,7 +44,7 @@ const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponen
       <div className="py-2 text-xs">
         <p>Fecha de entrega: {moment(order.shippingDate).format('DD/MM/YY')}</p>
         <p>Hora de entrega: {moment(order.shippingDate).format('HH:mm')}</p>
-        <p>Lugar de entrega: {order.shippingPlace}</p>
+        <p>Lugar de entrega: {getStoreAddress(order.shippingPlace)}</p>
       </div>
       <div className="border-t-2 border-dashed border-black"></div>
       <div className="py-2 text-xs">
