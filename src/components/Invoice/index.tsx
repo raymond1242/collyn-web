@@ -56,7 +56,7 @@ const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponen
       <div className="text-center py-2 font-semibold">
         GRACIAS POR SU COMPRA
       </div>
-      <div className="text-xs">
+      <div className="text-xs text-justify">
         <p>Nuestros productos no contienen preservantes ni saborizantes, por lo que debe mantenerse refrigerado y ser consumido el mismo día de su compra.</p>
         <p>Es importante respetar la hora de recojo, La empresa no se responsabiliza del producto(s) pasadas las 3 horas.</p>
         <p>Esto es solo una nota de pedido, al pago del total, se emitirá la boleta o factura.</p>
