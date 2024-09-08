@@ -29,6 +29,12 @@ export default function OrderCreatedModal ({ order, open }: { order: Order, open
           </p>
           <div className="flex flex-col gap-0 my-1">
             <p className="font-light">
+              Código de pedido:
+              <span className="text-2xl font-semibold mx-1.5">
+                {order.code}
+              </span>
+            </p>
+            <p className="font-light">
               Fecha: {moment(order.createdAt).format('DD/MM/YY HH:mm')}
             </p>
             <p className="font-light">

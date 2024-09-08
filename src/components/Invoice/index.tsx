@@ -29,7 +29,7 @@ const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponen
         />
       </div>
       <div className="border-t-2 border-b-2 border-dashed border-black text-center py-0.5 font-semibold">
-        PEDIDO
+        CÓDIGO DE PEDIDO: {order.code}
       </div>
       <div className="py-2 text-xs">
         <p>Fecha: {moment(order.createdAt).format('DD/MM/YY')}</p>

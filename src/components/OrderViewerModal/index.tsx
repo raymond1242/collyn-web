@@ -59,6 +59,10 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
                 )}
               </div>
             </div>
+            <div className="flex flex-col border border-neutral-500 rounded-md py-1 px-3 w-fit mb-1">
+              <p className="text-xs font-light">Codigo de pedido</p>
+              <p className="text-2xl font-bold">{record.code}</p>
+            </div>
             <div className=" bg-neutral-600 text-white rounded-md py-1 px-2">Producto</div>
             <p className="whitespace-pre-wrap text-base font-light">
               {record.product}

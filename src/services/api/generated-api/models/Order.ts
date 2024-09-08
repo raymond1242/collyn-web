@@ -136,6 +136,12 @@ export interface Order {
     completed?: boolean;
     /**
      * 
+     * @type {string}
+     * @memberof Order
+     */
+    code?: string;
+    /**
+     * 
      * @type {number}
      * @memberof Order
      */
@@ -170,6 +176,7 @@ export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Ord
         'hasTopper': !exists(json, 'has_topper') ? undefined : json['has_topper'],
         'hasDelivery': !exists(json, 'has_delivery') ? undefined : json['has_delivery'],
         'completed': !exists(json, 'completed') ? undefined : json['completed'],
+        'code': !exists(json, 'code') ? undefined : json['code'],
         'company': json['company'],
     };
 }
@@ -197,6 +204,7 @@ export function OrderToJSON(value?: Order | null): any {
         'has_topper': value.hasTopper,
         'has_delivery': value.hasDelivery,
         'completed': value.completed,
+        'code': value.code,
         'company': value.company,
     };
 }
