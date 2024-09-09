@@ -24,7 +24,19 @@ export interface OrderImage {
      * @type {string}
      * @memberof OrderImage
      */
+    readonly id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderImage
+     */
     readonly image?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderImage
+     */
+    order: string;
 }
 
 export function OrderImageFromJSON(json: any): OrderImage {
@@ -37,7 +49,9 @@ export function OrderImageFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'image': !exists(json, 'image') ? undefined : json['image'],
+        'order': json['order'],
     };
 }
 
@@ -50,6 +64,7 @@ export function OrderImageToJSON(value?: OrderImage | null): any {
     }
     return {
         
+        'order': value.order,
     };
 }
 

@@ -3,7 +3,7 @@ import { Order } from "@/services";
 import { useState, useEffect } from "react";
 import { EditFilled } from "@ant-design/icons";
 import { Button, Modal, Form, Input, Select, Switch } from "antd";
-import { OrdersApiService } from "@/services";
+import { OrdersApiService, OrderImage } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 import moment from "moment";
@@ -25,6 +25,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
   const [advancePayment, setAdvancePayment] = useState(Number(record.advancePayment));
   const [price, setPrice] = useState(Number(record.price));
   const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState<(OrderImage | undefined)[] | undefined>(record.images);
 
   const { companyStores } = useAuthContext();
   const ordersApi = OrdersApiService();
@@ -117,6 +118,10 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
     }
   }
 
+  const handleRemoveImage = (image: OrderImage | undefined) => {
+    console.log("Will remove image");
+  }
+
   useEffect(() => {
     setLocationOptions(companyStores.map(store => ({ value: store.name, label: store.name })));
   }, [companyStores]);
@@ -142,24 +147,35 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
         onCancel={() => setOpenModal(false)}
         footer={null}
       >
-        <div className={`grid grid-cols-1 gap-2 items-center ${Number(record?.images?.length) > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
-          {Number(record?.images?.length) > 0 && (
-            <div className="flex lg:flex-col flex-wrap justify-center gap-4 lg:order-first order-last">
-              {record?.images?.map((image, index) => (
-                <div key={index}>
-                  <p className="text-base absolute font-medium bg-red-600 text-white w-fit px-2 py-1 rounded-lg">{index + 1}</p>
+        <div className="grid lg:grid-cols-3 grid-cols-2 gap-2 items-center">
+          <div className="flex flex-col gap-4 lg:order-first lg:col-span-1 col-span-2 order-last py-2">
+            <div className="flex lg:flex-col flex-wrap justify-center gap-4">
+              {images?.map((image, index) => (
+                <div key={index} className="border-2 border-primary bg-primary rounded-lg">
+                  <div className="flex justify-between items-start mb-0.5">
+                    <p className="text-sm font-semibold bg-white text-primary w-fit px-2 py-0.5 rounded-lg">
+                      {index + 1}
+                    </p>
+                    <p
+                      onClick={() => handleRemoveImage(image)}
+                      className="text-xs hover:cursor-pointer bg-red-500 text-white w-fit px-1.5 py-1 rounded-lg"
+                    >
+                      Eliminar
+                    </p>
+                  </div>
                   <Image
-                    key={image.image!}
-                    src={image.image!}
+                    key={image?.image!}
+                    src={image?.image!}
                     alt="Order image"
                     width={350}
                     height={300}
-                    className="rounded-xl bg-neutral-100 border"
+                    className="rounded-lg bg-neutral-100"
                   />
                 </div>
               ))}
             </div>
-          )}
+            <Button>Agregar imagen</Button>
+          </div>
           <div className="lg:py-6 py-4 lg:px-4 p-1 col-span-2 flex flex-col justify-center gap-4">
             <p className="text-center text-2xl font-light">Editar pedido</p>
             <Form

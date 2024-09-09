@@ -34,7 +34,7 @@ export default function Home() {
               </Button>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-6 items-center">
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 items-center">
           <div className="flex flex-col gap-4 px-6">
             <p className="text-5xl font-bold text-primary -mb-3">SISTEMA DE GESTIÓN</p>
             <p className="text-5xl font-bold text-primary">DE PEDIDOS</p>
