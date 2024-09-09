@@ -8,6 +8,10 @@ import moment from "moment";
 export default function OrderViewerModal ({ record }: { record: Order }) {
   const [openModal, setOpenModal] = useState(false);
 
+  const compareDates = (date1: Date | undefined, date2: Date | undefined): boolean => {
+    return date1?.getTime() === date2?.getTime();
+  }
+
   return (
     <>
       <Button
@@ -78,7 +82,7 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
                 </div>
                 <div>
                   <p className="text-title">Fecha registro</p>
-                  <p className="text-description">{moment(record.createdAt).format('DD/MM/YY')}</p>
+                  <p className="text-description">{moment(record.createdAt).format('DD/MM/YY HH:mm')}</p>
                 </div>
                 <div>
                   <p className="text-title">Fecha entrega</p>
@@ -91,6 +95,12 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
                 <div className="border border-neutral-500 rounded-md py-1 px-2">
                   <p className="text-title">Lugar entrega</p>
                   <p className="text-xl font-medium">{record.shippingPlace}</p>
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-title">Estado:</p>
+                  <p className="text-lg font-medium">
+                    {record.completed ? 'Entregado' : 'No entregado'}
+                  </p>
                 </div>
               </div>
               <div className="grid lg:grid-cols-2 grid-cols-3 gap-1 h-fit">
@@ -116,18 +126,18 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
                 </div>
               </div>
             </div>
-            <div className="flex items-end gap-2">
-              <p className="text-title">Estado:</p>
-              <p className="text-xl font-medium">
-                {record.completed ? 'Entregado' : 'No entregado'}
-              </p>
-            </div>
-            <div>
-              {record.updatedAt !== record.createdAt && (
-                <p className="text-base text-red-500">
-                  Fue modificado el {moment(record.updatedAt).format('DD/MM/YY HH:mm')}
+            <div className="border border-neutral-500 rounded-md py-1 px-2 w-fit">
+              <p className="text-title">Última modificación</p>
+              {!compareDates(record.createdAt, record.updatedAt) ? (
+                <p className="text-lg text-red-500">
+                  {moment(record.updatedAt).format('DD/MM/YY HH:mm')}
                 </p>
-              )}
+              ) : (
+                <p className="text-lg font-semibold text-green-500">
+                  No ha sido modificado
+                </p>
+              )
+              }
             </div>
           </div>
         </div>
