@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Order } from "@/services";
 import { useState, useEffect } from "react";
-import { EditFilled } from "@ant-design/icons";
+import { EditFilled, UploadOutlined } from "@ant-design/icons";
 import { Button, Modal, Form, Input, Select, Switch } from "antd";
-import { OrdersApiService, OrderImage } from "@/services";
+import { OrdersApiService, OrderImageApiService, OrderImage, createOrderImage } from "@/services";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 import moment from "moment";
@@ -17,6 +17,11 @@ interface OrderEditModalProps {
   disabled: boolean;
 }
 
+interface ImageFile {
+  id: string;
+  file: File;
+}
+
 export default function OrderEditModal ({record, isAdmin, orders, setOrders, disabled }: OrderEditModalProps) {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -26,9 +31,15 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
   const [price, setPrice] = useState(Number(record.price));
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<(OrderImage | undefined)[] | undefined>(record.images);
+  const [uploadedImages, setUploadedImages] = useState<ImageFile[]>([]);
+  const [loadingUploadedImages, setLoadingUploadedImages] = useState(false);
+  const [disabledUploadedImages, setDisabledUploadedImages] = useState(false);
+  const [loadingRemoveImage, setLoadingRemoveImage] = useState(false);
+  const [disabledRemoveImage, setDisabledRemoveImage] = useState(false);
 
   const { companyStores } = useAuthContext();
   const ordersApi = OrdersApiService();
+  const orderImageApi = OrderImageApiService();
 
   const createDateTime = (date: string, time: string): Date => {
     const dateTime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm');
@@ -80,7 +91,6 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
       }
     }).then((response) => {
       setLoading(false);
-      console.log(response);
       setOrders(orders.map(
         order => (
           order.id === record.id ? {
@@ -118,9 +128,47 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
     }
   }
 
-  const handleRemoveImage = (image: OrderImage | undefined) => {
-    console.log("Will remove image");
+  const handleRemoveImage = (selectedImage: OrderImage | undefined) => {
+    setLoadingRemoveImage(true);
+    setDisabledRemoveImage(true);
+    orderImageApi.orderImagesDelete({
+      id: selectedImage?.id as string
+    }).then((response) => {
+      setImages(prevImages => prevImages?.filter(image => image?.id !== selectedImage?.id));
+      setLoadingRemoveImage(false);
+      setDisabledRemoveImage(false);
+    }).catch((error) => {
+      console.error(error);
+    });
   }
+
+  const handleAddImage = (selectedImage: ImageFile) => {
+    setLoadingUploadedImages(true);
+    setDisabledUploadedImages(true);
+    const formData = new FormData();
+    formData.append('image', selectedImage.file);
+    formData.append('order', record.id as string);
+
+    createOrderImage(formData).then((response) => {
+      setImages(prevImages => prevImages?.concat(response));
+      setLoadingUploadedImages(false);
+      setDisabledUploadedImages(false);
+      setUploadedImages(prevImages => prevImages.filter(image => image.id !== selectedImage.id));
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  const onChangeInputFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const filesArray = Array.from(event.target.files).map(file => ({
+        id: URL.createObjectURL(file),
+        file
+      }));
+      setUploadedImages(prevImages => prevImages.concat(filesArray));
+      event.target.value = ''; 
+    }
+  };
 
   useEffect(() => {
     setLocationOptions(companyStores.map(store => ({ value: store.name, label: store.name })));
@@ -151,17 +199,19 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
           <div className="flex flex-col gap-4 lg:order-first lg:col-span-1 col-span-2 order-last py-2">
             <div className="flex lg:flex-col flex-wrap justify-center gap-4">
               {images?.map((image, index) => (
-                <div key={index} className="border-2 border-primary bg-primary rounded-lg">
+                <div key={index} className="border-2 border-primary bg-primary rounded-lg h-fit">
                   <div className="flex justify-between items-start mb-0.5">
                     <p className="text-sm font-semibold bg-white text-primary w-fit px-2 py-0.5 rounded-lg">
                       {index + 1}
                     </p>
-                    <p
+                    <Button
                       onClick={() => handleRemoveImage(image)}
-                      className="text-xs hover:cursor-pointer bg-red-500 text-white w-fit px-1.5 py-1 rounded-lg"
+                      className="btn-danger"
+                      loading={loadingRemoveImage}
+                      disabled={disabledRemoveImage}
                     >
                       Eliminar
-                    </p>
+                    </Button>
                   </div>
                   <Image
                     key={image?.image!}
@@ -174,7 +224,39 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                 </div>
               ))}
             </div>
-            <Button>Agregar imagen</Button>
+            <div className="flex flex-wrap gap-4 mt-4">
+              {uploadedImages.map((image, index) => (
+                <div key={image.id}>
+                  <Button
+                    type="primary"
+                    className="absolute w-fit z-10"
+                    onClick={() => handleAddImage(image)}
+                    loading={loadingUploadedImages}
+                    disabled={disabledUploadedImages}
+                  >
+                    Agregar
+                  </Button>
+                  <Image src={image.id} alt="Selected" width={160} height={100} />
+                </div>
+              ))}
+            </div>
+            <div>
+              <label
+                htmlFor="input-file"
+                className="flex gap-2 cursor-pointer bg-white border border-primary rounded-lg p-2 w-fit text-primary"
+              >
+                <UploadOutlined className="text-primary" />
+                Subir imagenes
+              </label>
+              <input
+                type='file'
+                id="input-file"
+                multiple
+                accept='image/png, image/jpeg'
+                onChange={onChangeInputFile}
+                style={{ display: 'none' }}
+              ></input>
+            </div>
           </div>
           <div className="lg:py-6 py-4 lg:px-4 p-1 col-span-2 flex flex-col justify-center gap-4">
             <p className="text-center text-2xl font-light">Editar pedido</p>

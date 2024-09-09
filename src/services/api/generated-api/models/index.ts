@@ -2,6 +2,7 @@ export * from './Company';
 export * from './Order';
 export * from './OrderCreate';
 export * from './OrderImage';
+export * from './OrderImageCreate';
 export * from './OrderUpdateAdmin';
 export * from './OrderUpdateCompleted';
 export * from './OrderUpdateStore';

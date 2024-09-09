@@ -1,5 +1,5 @@
-import { Configuration, Order, OrderFromJSON } from "./generated-api";
-import { AuthApi, OrdersApi, CompanyApi } from "./generated-api/apis";
+import { Configuration, Order, OrderImage, OrderFromJSON, OrderImageFromJSON } from "./generated-api";
+import { AuthApi, OrdersApi, OrderApi, CompanyApi } from "./generated-api/apis";
 import { AuthService } from "@/services/auth.service";
 
 export * from "./generated-api";
@@ -30,6 +30,14 @@ export const CompanyApiService = (): CompanyApi =>
     }),
   );
 
+export const OrderImageApiService = (): OrderApi =>
+  new OrderApi(
+    new Configuration({
+      basePath: API_BASE_URL,
+      headers: AuthService.getDefaultHeaders(),
+    }),
+  );
+
 export const createOrder = async (formData: FormData): Promise<Order> => {
   const response = await fetch(`${API_BASE_URL}/orders`, {
     method: 'POST',
@@ -38,4 +46,14 @@ export const createOrder = async (formData: FormData): Promise<Order> => {
   });
 
   return OrderFromJSON(await response.json());
+}
+
+export const createOrderImage = async (formData: FormData): Promise<OrderImage> => {
+  const response = await fetch(`${API_BASE_URL}/order/images`, {
+    method: 'POST',
+    body: formData,
+    headers: AuthService.getDefaultHeaders(),
+  });
+
+  return OrderImageFromJSON(await response.json());
 }

@@ -83,7 +83,7 @@
   }
 
   &:disabled {
-    @apply pointer-events-none
+    @apply text-white opacity-95 pointer-events-none !important;
   }
 }
 
@@ -116,7 +116,7 @@
   }
 
   &:disabled {
-    @apply pointer-events-none
+    @apply pointer-events-none border-primary text-primary !important;
   }
 }
 
