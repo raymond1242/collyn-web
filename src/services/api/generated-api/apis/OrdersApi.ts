@@ -43,6 +43,7 @@ export interface OrdersCreateRequest {
 }
 
 export interface OrdersListRequest {
+    code?: string;
     shippingStartDate?: string;
     shippingEndDate?: string;
     shippingPlace?: string;
@@ -147,6 +148,10 @@ export class OrdersApi extends runtime.BaseAPI {
      */
     async ordersListRaw(requestParameters: OrdersListRequest): Promise<runtime.ApiResponse<Array<Order>>> {
         const queryParameters: any = {};
+
+        if (requestParameters.code !== undefined) {
+            queryParameters['code'] = requestParameters.code;
+        }
 
         if (requestParameters.shippingStartDate !== undefined) {
             queryParameters['shipping_start_date'] = requestParameters.shippingStartDate;

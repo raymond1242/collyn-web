@@ -1,4 +1,4 @@
-import { Table, Button, Tag, DatePicker, Select, Switch } from "antd";
+import { Table, Button, Tag, DatePicker, Select, Switch, Input } from "antd";
 import type { TableProps } from "antd";
 import { ShopOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -10,8 +10,11 @@ import OrderEditModal from "@/components/OrderEditModal";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import PrintInvoiceModal from "@/components/PrintInvoiceModal";
 import { useAuthContext } from "@/contexts/AuthContext";
+import type { GetProps } from 'antd';
+import { on } from "events";
 
 const { RangePicker } = DatePicker;
+type SearchProps = GetProps<typeof Input.Search>;
 
 interface FilterButtons {
   label: string;
@@ -39,6 +42,7 @@ export default function OrderList () {
 
   const [productionFilter, setProductionFilter] = useState(false);
   const [topperFilter, setTopperFilter] = useState(false);
+  const [filterCode, setFilterCode] = useState('');
 
   const router = useRouter();
   const ordersApi = OrdersApiService();
@@ -52,7 +56,8 @@ export default function OrderList () {
         shippingEndDate: filterDate.end,
         shippingPlace: filterLocation,
         hasProduction: productionFilter,
-        hasTopper: topperFilter
+        hasTopper: topperFilter,
+        code: filterCode
       }
     ).then((response) => {
       setOrders(response);
@@ -82,7 +87,7 @@ export default function OrderList () {
 
   useEffect(() => {
     getOrders();
-  }, [filterDate, filterLocation, productionFilter, topperFilter]);
+  }, [filterDate, filterLocation, productionFilter, topperFilter, filterCode]);
 
   useEffect(() => {
     let options = companyStores.map(store => ({ value: store.name, label: store.name }))
@@ -119,7 +124,7 @@ export default function OrderList () {
       key: "id",
       width: 100,
       render: (_, record) => (
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-2 items-center">
           <OrderEditModal
             record={record}
             isAdmin={isAdmin}
@@ -137,6 +142,16 @@ export default function OrderList () {
       dataIndex: "name",
       key: "name",
       render: (text: string) => <p>{text}</p>,
+    },
+    {
+      title: "Código",
+      dataIndex: "code",
+      key: "code",
+      render: (text: string) => (
+        <div className="text-center">
+          <p className="font-semibold text-sm border border-neutral-400  p-1 rounded-md">{text}</p>
+        </div>
+      ),
     },
     {
       title: "Precio",
@@ -308,6 +323,14 @@ export default function OrderList () {
               Administrar usuarios
             </Button>
           )}
+        </div>
+        <div className="lg:w-[420px] w-full flex flex-row gap-2 items-center">
+          <p className="font-light w-28">Buscar por:</p>
+          <Input.Search
+            onChange={(e) => setFilterCode(e.target.value)}
+            placeholder="Código de pedido"
+            loading={loadingOrders}
+          />
         </div>
         <div className="flex justify-between lg:flex-row flex-col gap-5">
           <div className="flex gap-1.5 items-center">
