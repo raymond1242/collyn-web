@@ -73,7 +73,7 @@ export default function Header () {
   }
 
   return (
-    <header className="flex flex-row justify-between items-center top-0 sticky opacity-95 z-20 bg-neutral-50 px-6 py-2.5">
+    <header className="flex flex-row justify-between items-center top-0 sticky opacity-80 z-20 bg-neutral-100 px-6 py-2.5">
       <div className="lg:flex flex-row gap-1 items-center hidden">
         <Link href={"/"} className="flex flex-row items-center ">
           <Image
@@ -96,7 +96,7 @@ export default function Header () {
                 <Image
                   src={companyLogo}
                   width={50}
-                  height={50}
+                  height={35}
                   onLoad={onLoadImage}
                   alt="Company logo"
                   className="h-auto w-[72px]"
