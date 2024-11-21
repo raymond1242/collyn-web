@@ -73,6 +73,14 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
             </p>
             <div className=" bg-neutral-600 text-white rounded-md py-1 px-2 mt-2">Descripción</div>
             <p className="text-[15px] font-light">{record.description}</p>
+            <div className="border border-neutral-500 rounded-md py-1 px-2 w-fit">
+              <p className="text-title">Número de teléfono</p>
+              {record.phoneNumber ? (
+                <p className="text-description">{record.phoneNumber}</p>
+              ) : (
+                <p className="text-description">No hay información</p>
+              )}
+            </div>
             <div className=" bg-neutral-600 text-white rounded-md py-1 px-2 mt-2">Detalle de producto</div>
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
               <div className="grid grid-cols-2 gap-3">

@@ -142,6 +142,12 @@ export interface Order {
     code?: string;
     /**
      * 
+     * @type {string}
+     * @memberof Order
+     */
+    phoneNumber?: string;
+    /**
+     * 
      * @type {number}
      * @memberof Order
      */
@@ -177,6 +183,7 @@ export function OrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Ord
         'hasDelivery': !exists(json, 'has_delivery') ? undefined : json['has_delivery'],
         'completed': !exists(json, 'completed') ? undefined : json['completed'],
         'code': !exists(json, 'code') ? undefined : json['code'],
+        'phoneNumber': !exists(json, 'phone_number') ? undefined : json['phone_number'],
         'company': json['company'],
     };
 }
@@ -205,6 +212,7 @@ export function OrderToJSON(value?: Order | null): any {
         'has_delivery': value.hasDelivery,
         'completed': value.completed,
         'code': value.code,
+        'phone_number': value.phoneNumber,
         'company': value.company,
     };
 }

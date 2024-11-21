@@ -103,6 +103,12 @@ export interface OrderCreate {
      * @memberof OrderCreate
      */
     images?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderCreate
+     */
+    phoneNumber?: string;
 }
 
 export function OrderCreateFromJSON(json: any): OrderCreate {
@@ -129,6 +135,7 @@ export function OrderCreateFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'hasDelivery': !exists(json, 'has_delivery') ? undefined : json['has_delivery'],
         'hasTopper': !exists(json, 'has_topper') ? undefined : json['has_topper'],
         'images': !exists(json, 'images') ? undefined : json['images'],
+        'phoneNumber': !exists(json, 'phone_number') ? undefined : json['phone_number'],
     };
 }
 
@@ -155,6 +162,7 @@ export function OrderCreateToJSON(value?: OrderCreate | null): any {
         'has_delivery': value.hasDelivery,
         'has_topper': value.hasTopper,
         'images': value.images,
+        'phone_number': value.phoneNumber,
     };
 }
 

@@ -101,6 +101,7 @@ export default function CreateOrder() {
     formData.append('has_production', values.prod ? 'true' : 'false');
     formData.append('has_delivery', values.delivery ? 'true' : 'false');
     formData.append('has_topper', values.topper ? 'true' : 'false');
+    formData.append('phone_number', values.phoneNumber);
 
     for (let i = 0; i < images.length; i++) {
       formData.append('images', images[i].file);
@@ -221,7 +222,7 @@ export default function CreateOrder() {
                 name="phoneNumber"
                 label="Número de teléfono"
               >
-                <Input disabled type="number" className="w-full" />
+                <Input type="number" className="w-full border-primary" />
               </Form.Item>
             </div>
             <div className="grid grid-cols-3 gap-4">
