@@ -80,26 +80,6 @@ export default function Home() {
           className="w-full h-full object-cover"
         />
       </div>
-      {/* <div>
-        <p className="text-lg font-light">
-          Bienvenido a
-          <span className="ml-1.5 text-primary text-xl font-normal">
-            Collyn
-          </span>
-        </p>
-        {isAuthenticated && (
-            <Button
-              loading={loading}
-              className="w-fit"
-              onClick={() => {
-                router.push('/order');
-                setLoading(true);
-              }}
-            >
-              Ir a la página de inicio
-            </Button>
-        )}
-      </div> */}
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 items-center bg-white">
         <div className="flex flex-col gap-4 lg:px-16 px-8">
           <p className={`${ubuntu.className} text-5xl font-medium text-primary mb-3`}>
