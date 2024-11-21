@@ -1,68 +1,112 @@
 "use client";
 
-// import { useRouter } from "next/navigation";
-// import { useAuthContext } from "@/contexts/AuthContext";
-// import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useState } from "react";
 import Image from "next/image";
 import { ubuntu } from "@/app/fonts";
+import { Button } from "antd";
+import { PhoneOutlined } from "@ant-design/icons";
 
 export default function Home() {
-  // const { isAuthenticated } = useAuthContext();
-  // const [loading, setLoading] = useState(false);
-  // const router = useRouter();
+  const { isAuthenticated } = useAuthContext();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   return (
-    <main className="flex flex-col bg-white">
-      <div className="relative inline-block">
-        <div className="hero-card flex flex-col gap-4">
+    <main className="flex flex-col bg-white pb-10">
+      <div className="grid lg:grid-cols-2 grid-cols-1 h-[660px] bg-primary">
+        <div className="flex flex-col lg:gap-10 gap-6 m-auto lg:px-16 px-8">
           <p
-            className={`${ubuntu.className} font-medium text-[84px] leading-[1]`} 
+            className={`${ubuntu.className} text-white font-bold text-[99px] leading-[1]`} 
           >
             Collyn
           </p>
-          <p className="text-6xl text-white">
-            Sistema de Gestión de
-            {/* <br /> */}
-            <span className="text-orange-600 ml-2 font-bold">
-              PEDIDOS
+          <p className="text-[36px] leading-tight font-light text-neutral-300">
+            Simplifica la gestión de pedidos<br/>y potencia tu&nbsp;
+            <span className="text-orange-600 font-bold">
+              negocio.
             </span>
           </p>
-        </div>
-        <Image
-          src={"/landing/client-sale.jpg"}
-          width={920}
-          height={500}
-          alt="Logo"
-          // objectFit="cover"
-          className="w-full block"
-        />
-      </div>
-        {/* <div>
-          <p className="text-lg font-light">
-            Bienvenido a
-            <span className="ml-1.5 text-primary text-xl font-normal">
-              Collyn
+          <p className="font-extralight text-xl text-white">
+            <span className="font-bold text-xl mr-1.5">
+              Control total
+            </span>
+            sobre tus pedidos en un solo lugar. Nuestra plataforma intuitiva está diseñada para ayudarte a
+            <span className="font-semibold mx-1 text-orange-600">
+              optimizar
+            </span>
+            tus procesos,
+            <span className="font-semibold mx-1 text-orange-600">
+              reducir
+            </span>
+            tiempos y
+            <span className="font-semibold mx-1 text-orange-600">
+              mejorar
+            </span>
+            la eficiencia operativa.
+            Todo lo que necesitas para gestionar tus órdenes de forma rápida y sencilla, lo encuentras
+            <span className="font-semibold mx-1">
+              aquí
             </span>
           </p>
-          {isAuthenticated && (
+          <div className="flex flex-row gap-2">
+            <Button
+              size="large"
+              className="btn-secondary w-fit"
+              icon={<PhoneOutlined />}
+            >
+              Contáctanos
+            </Button>
+            {isAuthenticated && (
               <Button
-                loading={loading}
-                className="w-fit"
+                size="large"
+                type="primary"
                 onClick={() => {
                   router.push('/order');
                   setLoading(true);
                 }}
               >
-                Ir a la página de inicio
+                Ingresar
               </Button>
-          )}
-        </div> */}
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 items-center bg-neutral-300">
-        <div className="flex flex-col gap-4 px-6">
-          <p className="text-5xl font-bold text-primary -mb-3">SISTEMA DE GESTIÓN</p>
-          <p className="text-5xl font-bold text-primary">DE PEDIDOS</p>
+            )}
+          </div>
+        </div>
+        <Image
+          src={"/landing/client-sale.jpg"}
+          width={920}
+          height={700}
+          alt="Logo"
+          className="w-full h-full object-cover"
+        />
+      </div>
+      {/* <div>
+        <p className="text-lg font-light">
+          Bienvenido a
+          <span className="ml-1.5 text-primary text-xl font-normal">
+            Collyn
+          </span>
+        </p>
+        {isAuthenticated && (
+            <Button
+              loading={loading}
+              className="w-fit"
+              onClick={() => {
+                router.push('/order');
+                setLoading(true);
+              }}
+            >
+              Ir a la página de inicio
+            </Button>
+        )}
+      </div> */}
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 items-center bg-white">
+        <div className="flex flex-col gap-4 lg:px-16 px-8">
+          <p className={`${ubuntu.className} text-5xl font-medium text-primary mb-3`}>
+            Sistema de Gestión<br/>de Pedidos
+          </p>
           <p className="font-extralight text-lg">
-            <span className="font-semibold mx-1 text-primary">
+            <span className="font-bold text-xl mr-1 text-primary">
               Collyn
             </span>
             es un sistema de gestión de pedidos diseñado para
@@ -82,13 +126,13 @@ export default function Home() {
         <div className="h-fit mx-auto">
           <Image
             src={"/landing/collyn-app.png"}
-            width={620}
+            width={660}
             height={600}
             alt="Logo"
           />
         </div>
       </div>
-      <div className="py-2 px-6">
+      <div className="py-8 px-16">
         <p className="text-4xl font-bold text-primary text-center mb-4">
           ¿QUÉ PUEDE HACER COLLYN?
         </p>

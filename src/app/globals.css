@@ -9,10 +9,6 @@
   --secondary: #DFDFDF;
 }
 
-.hero-card {
-  @apply font-medium shadow-xl shadow-neutral-900 text-white absolute w-[620px] px-8 translate-x-0 translate-y-1/2 py-6 bg-transparent backdrop-blur-2xl ml-10 rounded-2xl
-}
-
 .ant-table-tbody > tr.ant-table-row:hover > td {
   background: none !important;
 }
@@ -91,7 +87,7 @@
   }
 }
 
-.btn-users {
+.btn-secondary {
   @apply bg-orange-600 text-white border-orange-600;
 
   &:hover {

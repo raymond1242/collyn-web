@@ -5,6 +5,7 @@ import { useEffect, useState, useContext, createContext } from "react";
 import { usePathname } from 'next/navigation';
 import { useRouter } from "next/navigation";
 import { UserCompanyStore, UserCompanyRoleEnum, AuthService } from "@/services";
+import Footer from "@/components/Footer";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -69,6 +70,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     >
       {!isAuthPage && <Header />}
       {children}
+      <Footer />
     </AuthContext.Provider>
   );
 }
