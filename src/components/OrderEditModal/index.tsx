@@ -367,7 +367,6 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                 >
                   <Input
                     min={1}
-                    type="number"
                     disabled={!isAdmin}
                     className="w-full border-primary"
                     onChange={(e) => setPrice(Number(e.target.value))}
@@ -382,7 +381,6 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                   <Input
                     min={0}
                     max={price}
-                    type="number"
                     className="w-full border-primary"
                     onChange={(e) => setAdvancePayment(Number(e.target.value))}
                   />
