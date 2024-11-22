@@ -188,7 +188,9 @@ export default function OrderList () {
       title: "Fecha entrega",
       dataIndex: "shippingDate",
       key: "shippingDate",
-      render: (date: Date) => <p>{moment(date).format('DD/MM/YY')}</p>,
+      render: (date: Date) => (
+        <p className="font-medium text-base">{moment(date).format('DD/MM/YY')}</p>
+      ),
     },
     {
       title: "Hora entrega",

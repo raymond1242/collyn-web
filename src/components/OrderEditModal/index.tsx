@@ -86,8 +86,8 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
         pendingPayment: String(pendingPayment),
         shippingPlace: values.shippingPlace,
         shippingDate: createDateTime(values.deliveryDate, values.deliveryTime),
-        hasProduction: values.prod,
-        hasDelivery: values.delivery,
+        hasProduction: values.hasProduction,
+        hasDelivery: values.hasDelivery,
       }
     }).then((response) => {
       setLoading(false);
