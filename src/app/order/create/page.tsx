@@ -234,7 +234,6 @@ export default function CreateOrder() {
               >
                 <Input
                   min={1}
-                  type="number"
                   className="w-full border-primary"
                   onChange={(e) => setPrice(Number(e.target.value))}
                 />
@@ -248,7 +247,6 @@ export default function CreateOrder() {
                 <Input
                   min={0}
                   max={price}
-                  type="number"
                   className="w-full border-primary"
                   onChange={(e) => setAdvancePayment(Number(e.target.value))}
                 />
