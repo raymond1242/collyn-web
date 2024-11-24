@@ -410,15 +410,17 @@ export default function OrderList () {
       {showCompletedOrders && (
         <div className="flex flex-col gap-4">
           <p className="text-xl font-light">Pedidos completados</p>
-          <Table
-            dataSource={completedOrders}
-            columns={columns}
-            size="middle"
-            loading={loadingCompletedOrders}
-            className="hover:cursor-pointer"
-            rowKey={(record) => record.id as string}
-            locale={{emptyText: 'No hay pedidos'}}
-          />
+          <div className="w-full overflow-x-auto">
+            <Table
+              dataSource={completedOrders}
+              columns={columns}
+              size="middle"
+              loading={loadingCompletedOrders}
+              className="hover:cursor-pointer"
+              rowKey={(record) => record.id as string}
+              locale={{emptyText: 'No hay pedidos'}}
+            />
+          </div>
         </div>
       )}
     </section>
