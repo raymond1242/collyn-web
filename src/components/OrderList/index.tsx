@@ -408,9 +408,9 @@ export default function OrderList () {
         </Button>
       </div>
       {showCompletedOrders && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full overflow-x-auto">
           <p className="text-xl font-light">Pedidos completados</p>
-          <div className="w-full overflow-x-auto">
+          <div className="">
             <Table
               dataSource={completedOrders}
               columns={columns}
