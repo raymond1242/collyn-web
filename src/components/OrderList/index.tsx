@@ -98,7 +98,7 @@ export default function OrderList () {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setAlertTime(moment().add(25, "minutes").toDate());
+      setAlertTime(moment().add(45, "minutes").toDate());
     }, 30000);
     return () => clearInterval(interval);
   }, []);
