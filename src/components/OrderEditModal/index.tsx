@@ -87,6 +87,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
         shippingPlace: values.shippingPlace,
         shippingDate: createDateTime(values.deliveryDate, values.deliveryTime),
         hasProduction: values.hasProduction,
+        hasTopper: values.hasTopper,
         hasDelivery: values.hasDelivery,
       }
     }).then((response) => {
@@ -104,6 +105,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
             shippingPlace: response.shippingPlace,
             shippingDate: response.shippingDate,
             hasProduction: response.hasProduction,
+            hasTopper: response.hasTopper,
             hasDelivery: response.hasDelivery,
           } : order
         )
@@ -273,6 +275,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                   registrationPlace: record.registrationPlace,
                   shippingPlace: record.shippingPlace,
                   hasProduction: record.hasProduction,
+                  hasTopper: record.hasTopper,
                   hasDelivery: record.hasDelivery,
                   images: record.images,
                 }
@@ -280,7 +283,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
             >
               {isAdmin && (
                 <>
-                  <div className="grid grid-cols-4 gap-4 -mb-2">
+                  <div className="grid grid-cols-5 gap-4 -mb-2">
                     <Form.Item
                       name="name"
                       label="Nombre"
@@ -294,6 +297,13 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                     <Form.Item
                       name="hasProduction"
                       label="Producción"
+                      valuePropName="checked"
+                    >
+                      <Switch />
+                    </Form.Item>
+                    <Form.Item
+                      name="hasTopper"
+                      label="Topper"
                       valuePropName="checked"
                     >
                       <Switch />
