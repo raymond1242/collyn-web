@@ -32,7 +32,7 @@ export default function OrderList () {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [currentFilter, setCurrentFilter] = useState(1);
   const [filterLocation, setFilterLocation] = useState("");
-  const [alertTime, setAlertTime] = useState(moment().add(25, "minutes").toDate());
+  const [alertTime, setAlertTime] = useState(moment().add(45, "minutes").toDate());
   const [loadingLocations, setLoadingLocations] = useState(true);
   const [locationOptions, setLocationOptions] = useState<Array<{ value: string, label: string }>>([]);
   const [filterDate, setFilterDate] = useState({
