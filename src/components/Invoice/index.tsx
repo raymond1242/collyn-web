@@ -42,6 +42,7 @@ const InvoiceComponent = React.forwardRef<HTMLDivElement | null, InvoiceComponen
         DETALLE DEL PEDIDO
       </div>
       <div className="py-2 text-xs">
+        <p>Nombre: {order.name}</p>
         <p>Fecha de entrega: {moment(order.shippingDate).format('DD/MM/YY')}</p>
         <p>Hora de entrega: {moment(order.shippingDate).format('HH:mm')}</p>
         <p>Lugar de entrega: {getStoreAddress(order.shippingPlace)}</p>
