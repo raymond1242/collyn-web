@@ -69,6 +69,12 @@ export interface OrderUpdateAdmin {
     shippingPlace?: string;
     /**
      * 
+     * @type {string}
+     * @memberof OrderUpdateAdmin
+     */
+    phoneNumber?: string;
+    /**
+     * 
      * @type {Date}
      * @memberof OrderUpdateAdmin
      */
@@ -117,6 +123,7 @@ export function OrderUpdateAdminFromJSONTyped(json: any, ignoreDiscriminator: bo
         'pendingPayment': !exists(json, 'pending_payment') ? undefined : json['pending_payment'],
         'registrationPlace': !exists(json, 'registration_place') ? undefined : json['registration_place'],
         'shippingPlace': !exists(json, 'shipping_place') ? undefined : json['shipping_place'],
+        'phoneNumber': !exists(json, 'phone_number') ? undefined : json['phone_number'],
         'shippingDate': !exists(json, 'shipping_date') ? undefined : (new Date(json['shipping_date'])),
         'hasProduction': !exists(json, 'has_production') ? undefined : json['has_production'],
         'hasTopper': !exists(json, 'has_topper') ? undefined : json['has_topper'],
@@ -142,6 +149,7 @@ export function OrderUpdateAdminToJSON(value?: OrderUpdateAdmin | null): any {
         'pending_payment': value.pendingPayment,
         'registration_place': value.registrationPlace,
         'shipping_place': value.shippingPlace,
+        'phone_number': value.phoneNumber,
         'shipping_date': value.shippingDate === undefined ? undefined : (value.shippingDate.toISOString()),
         'has_production': value.hasProduction,
         'has_topper': value.hasTopper,

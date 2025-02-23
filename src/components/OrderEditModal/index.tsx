@@ -87,6 +87,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
         shippingPlace: values.shippingPlace,
         shippingDate: createDateTime(values.deliveryDate, values.deliveryTime),
         hasProduction: values.hasProduction,
+        phoneNumber: values.phoneNumber,
         hasTopper: values.hasTopper,
         hasDelivery: values.hasDelivery,
       }
@@ -105,6 +106,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
             shippingPlace: response.shippingPlace,
             shippingDate: response.shippingDate,
             hasProduction: response.hasProduction,
+            phoneNumber: response.phoneNumber,
             hasTopper: response.hasTopper,
             hasDelivery: response.hasDelivery,
           } : order
@@ -277,6 +279,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                   hasProduction: record.hasProduction,
                   hasTopper: record.hasTopper,
                   hasDelivery: record.hasDelivery,
+                  phoneNumber: record.phoneNumber,
                   images: record.images,
                 }
               }
@@ -340,16 +343,27 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                       className="border-primary"
                     />
                   </Form.Item>
-                  <Form.Item
-                    name="shippingPlace"
-                    label="Lugar de entrega"
-                    rules={[{ required: true, message: "Por favor ingrese un lugar de entrega" }]}
-                  >
-                    <Select
-                      size="large"
-                      options={locationOptions}
-                    />
-                  </Form.Item>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Form.Item
+                      name="shippingPlace"
+                      label="Lugar de entrega"
+                      rules={[{ required: true, message: "Por favor ingrese un lugar de entrega" }]}
+                    >
+                      <Select
+                        size="large"
+                        options={locationOptions}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name="phoneNumber"
+                      label="Numero de teléfono"
+                      rules={[{ required: true, message: "Por favor ingrese un lugar de entrega" }]}
+                    >
+                      <Input
+                        className="border-primary"
+                      />
+                    </Form.Item>
+                  </div>
                 </>
               )}
               <div className="grid grid-cols-2 gap-4">
