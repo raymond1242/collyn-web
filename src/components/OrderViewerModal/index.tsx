@@ -76,7 +76,7 @@ export default function OrderViewerModal ({ record }: { record: Order }) {
             <div className="border border-neutral-500 rounded-md py-1 px-2 w-fit">
               <p className="text-title">Número de teléfono</p>
               {record.phoneNumber ? (
-                <p className="text-description">{record.phoneNumber}</p>
+                <p className="text-description">{record.phoneNumber === 'undefined' ? 'No hay información' : record.phoneNumber}</p>
               ) : (
                 <p className="text-description">No hay información</p>
               )}
