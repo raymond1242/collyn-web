@@ -30,10 +30,8 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
   const [advancePayment, setAdvancePayment] = useState(Number(record.advancePayment));
   const [price, setPrice] = useState(Number(record.price));
   const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState<(OrderImage | undefined)[] | undefined>(record.images);
-  const [uploadedImages, setUploadedImages] = useState<ImageFile[]>([]);
+  const [images, setImages] = useState<(OrderImage)[] | undefined>(record.images);
   const [loadingUploadedImages, setLoadingUploadedImages] = useState(false);
-  const [disabledUploadedImages, setDisabledUploadedImages] = useState(false);
   const [loadingRemoveImage, setLoadingRemoveImage] = useState(false);
   const [disabledRemoveImage, setDisabledRemoveImage] = useState(false);
 
@@ -62,7 +60,8 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
             ...order,
             advancePayment: response.advancePayment,
             pendingPayment: response.pendingPayment,
-            shippingDate: response.shippingDate
+            shippingDate: response.shippingDate,
+            images: images,
           } : order
         )
       ));
@@ -109,6 +108,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
             phoneNumber: response.phoneNumber,
             hasTopper: response.hasTopper,
             hasDelivery: response.hasDelivery,
+            images: images,
           } : order
         )
       ));
@@ -148,7 +148,6 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
 
   const handleAddImage = (selectedImage: ImageFile) => {
     setLoadingUploadedImages(true);
-    setDisabledUploadedImages(true);
     const formData = new FormData();
     formData.append('image', selectedImage.file);
     formData.append('order', record.id as string);
@@ -156,8 +155,6 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
     createOrderImage(formData).then((response) => {
       setImages(prevImages => prevImages?.concat(response));
       setLoadingUploadedImages(false);
-      setDisabledUploadedImages(false);
-      setUploadedImages(prevImages => prevImages.filter(image => image.id !== selectedImage.id));
     }).catch((error) => {
       console.error(error);
     });
@@ -169,7 +166,7 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
         id: URL.createObjectURL(file),
         file
       }));
-      setUploadedImages(prevImages => prevImages.concat(filesArray));
+      filesArray.forEach(file => handleAddImage(file));
       event.target.value = ''; 
     }
   };
@@ -228,26 +225,10 @@ export default function OrderEditModal ({record, isAdmin, orders, setOrders, dis
                 </div>
               ))}
             </div>
-            <div className="flex flex-wrap gap-4 mt-4">
-              {uploadedImages.map((image, index) => (
-                <div key={image.id}>
-                  <Button
-                    type="primary"
-                    className="absolute w-fit z-10"
-                    onClick={() => handleAddImage(image)}
-                    loading={loadingUploadedImages}
-                    disabled={disabledUploadedImages}
-                  >
-                    Agregar
-                  </Button>
-                  <Image src={image.id} alt="Selected" width={160} height={100} />
-                </div>
-              ))}
-            </div>
             <div>
               <label
                 htmlFor="input-file"
-                className="flex gap-2 cursor-pointer bg-white border border-primary rounded-lg p-2 w-fit text-primary"
+                className={`flex gap-2 bg-white border border-primary rounded-lg p-2 w-fit text-primary ${loadingUploadedImages ? 'hover:pointer-events-none opacity-40' : 'cursor-pointer'}`}
               >
                 <UploadOutlined className="text-primary" />
                 Subir imagenes
