@@ -59,8 +59,8 @@ export default function CreateOrder() {
 
   const buildShippingDate = (date: string, time: string): string => {
     const dateTime = moment(date + ' ' + time, 'YYYY-MM-DD HH:mm');
-    if (dateTime < moment().add(-5, 'minutes')) {
-      return '';
+    if (dateTime < moment()) {
+      return moment().add(5, 'minutes').format('YYYY-MM-DDTHH:mm');
     }
     return dateTime.format('YYYY-MM-DDTHH:mm');
   }
