@@ -393,6 +393,7 @@ export default function OrderList () {
           loading={loadingOrders}
           rowKey={(record) => record.id as string}
           locale={{emptyText: 'No hay pedidos'}}
+          pagination={{ pageSize: 20 }}
         />
       </div>
       <div>
