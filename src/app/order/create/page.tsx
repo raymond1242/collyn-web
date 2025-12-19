@@ -158,7 +158,7 @@ export default function CreateOrder() {
                 name="prod"
                 label="Producción"
                 valuePropName="checked"
-                initialValue={false}
+                initialValue={true}
               >
                 <Switch />
               </Form.Item>
