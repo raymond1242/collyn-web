@@ -82,7 +82,7 @@ export default function Home() {
               Collyn
             </h1>
 
-            <p className="text-2xl lg:text-3xl leading-tight font-light text-white/80 max-w-2xl">
+            <p className="text-2xl lg:text-3xl leading-tight font-light text-white/80 max-w-3xl">
               Simplifica la gestión de pedidos y potencia tu{" "}
               <span className="text-orange-500 font-bold">negocio.</span>
             </p>
@@ -111,7 +111,7 @@ export default function Home() {
             <div className="flex flex-wrap justify-center gap-4 mt-4">
               <Button
                 size="large"
-                className="btn-secondary h-14 px-10 text-lg font-medium rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-shadow"
+                className="btn-secondary h-12 px-10 text-lg font-medium rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-shadow"
                 icon={<PhoneOutlined />}
               >
                 Contáctanos
@@ -135,7 +135,7 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="text-white/50 text-sm">Descubre más</span>
           <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
             <div className="w-1.5 h-3 bg-white/50 rounded-full animate-bounce" />
