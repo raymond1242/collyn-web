@@ -160,7 +160,7 @@ export default function CreateOrder() {
                 valuePropName="checked"
                 initialValue={true}
               >
-                <Switch />
+                <Switch disabled={true} />
               </Form.Item>
               <Form.Item
                 name="delivery"
